@@ -4,6 +4,7 @@
  */
 import { sendSuccess, sendError } from "../utils/responseHelper.js";
 import { getAllRiddles, addRiddle, updateRiddle, deleteRiddle } from "../dal/riddlesDAL.js";
+import { validateRiddleData, validateRiddleId } from "../utils/riddleValidator.js";
 
 export function riddlesRoutes(req, res) {
   const { pathname } = req.parsedUrl;
@@ -19,11 +20,12 @@ export function riddlesRoutes(req, res) {
 
   // POST /riddles/addRiddle
   if (pathname === "/riddles/addRiddle" && method === "POST") {
-    const { name, taskDescription, correctAnswer } = req.body || {};
-    if (!name || !taskDescription || !correctAnswer) {
-      sendError(res, 400, "Missing name, taskDescription, or correctAnswer in request body");
+    const validationError = validateRiddleData(req.body);
+    if (validationError) {
+      sendError(res, 400, validationError);
       return;
     }
+    const { name, taskDescription, correctAnswer } = req.body;
     addRiddle({ name, taskDescription, correctAnswer })
       .then((created) => sendSuccess(res, created, "Riddle added successfully"))
       .catch((err) => sendError(res, 500, "Failed to add riddle", err.message));
@@ -33,8 +35,14 @@ export function riddlesRoutes(req, res) {
   // PUT /riddles/updateRiddle
   if (pathname === "/riddles/updateRiddle" && method === "PUT") {
     const { id, name, taskDescription, correctAnswer } = req.body || {};
-    if (!id || !name || !taskDescription || !correctAnswer) {
-      sendError(res, 400, "Missing id, name, taskDescription, or correctAnswer in request body");
+    const idError = validateRiddleId(id);
+    if (idError) {
+      sendError(res, 400, idError);
+      return;
+    }
+    const dataError = validateRiddleData({ name, taskDescription, correctAnswer });
+    if (dataError) {
+      sendError(res, 400, dataError);
       return;
     }
     updateRiddle(id, { name, taskDescription, correctAnswer })
@@ -46,8 +54,9 @@ export function riddlesRoutes(req, res) {
   // DELETE /riddles/deleteRiddle
   if (pathname === "/riddles/deleteRiddle" && method === "DELETE") {
     const { id } = req.body || {};
-    if (!id) {
-      sendError(res, 400, "Missing id in request body");
+    const idError = validateRiddleId(id);
+    if (idError) {
+      sendError(res, 400, idError);
       return;
     }
     deleteRiddle(id)
