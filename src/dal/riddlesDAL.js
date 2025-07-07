@@ -33,3 +33,18 @@ export function addRiddle(riddle) {
     });
   });
 }
+
+/**
+ * Update an existing riddle by id (async/Promise)
+ * @param {string} id - The id of the riddle to update
+ * @param {Object} updatedFields - The fields to update (name, taskDescription, correctAnswer)
+ * @returns {Promise<Object>} The updated riddle
+ */
+export function updateRiddle(id, updatedFields) {
+  return new Promise((resolve, reject) => {
+    db.update(id, updatedFields, (err, updated) => {
+      if (err) return reject(err);
+      resolve(updated);
+    });
+  });
+}
