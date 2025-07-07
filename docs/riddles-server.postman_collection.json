@@ -1,0 +1,83 @@
+{
+  "info": {
+    "_postman_id": "riddles-server-collection-2025",
+    "name": "Riddles Server API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Riddles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/riddles",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["riddles"]
+        }
+      }
+    },
+    {
+      "name": "Add Riddle",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"חידה חדשה\",\n  \"taskDescription\": \"מה הולך ובא ולא מגיע אף פעם?\",\n  \"correctAnswer\": \"מחר\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/riddles/addRiddle",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["riddles", "addRiddle"]
+        }
+      }
+    },
+    {
+      "name": "Update Riddle",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 1,\n  \"name\": \"עודכן\",\n  \"taskDescription\": \"עודכן\",\n  \"correctAnswer\": \"עודכן\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/riddles/updateRiddle",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["riddles", "updateRiddle"]
+        }
+      }
+    },
+    {
+      "name": "Delete Riddle",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/riddles/deleteRiddle",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["riddles", "deleteRiddle"]
+        }
+      }
+    }
+  ]
+}
