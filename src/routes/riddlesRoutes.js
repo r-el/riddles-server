@@ -5,6 +5,7 @@
 import { sendSuccess, sendError } from "../utils/responseHelper.js";
 import { getAllRiddles, addRiddle, updateRiddle, deleteRiddle } from "../dal/riddlesDAL.js";
 import { validateRiddleData, validateRiddleId } from "../utils/riddleValidator.js";
+import { Riddle } from "../models/Riddle.js";
 
 export function riddlesRoutes(req, res) {
   const { pathname } = req.parsedUrl;
@@ -25,8 +26,8 @@ export function riddlesRoutes(req, res) {
       sendError(res, 400, validationError);
       return;
     }
-    const { name, taskDescription, correctAnswer } = req.body;
-    addRiddle({ name, taskDescription, correctAnswer })
+    const riddle = new Riddle(req.body);
+    addRiddle(riddle)
       .then((created) => sendSuccess(res, created, "Riddle added successfully"))
       .catch((err) => sendError(res, 500, "Failed to add riddle", err.message));
     return;
