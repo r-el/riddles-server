@@ -1,0 +1,17 @@
+{
+  "name": "riddles-server",
+  "version": "1.0.0",
+  "description": "A Node.js riddles server using vanilla HTTP module and json-file-crud",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["riddles", "server", "nodejs", "crud", "json"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "json-file-crud": "^1.1.0"
+  }
+}
