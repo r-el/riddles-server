@@ -3,7 +3,7 @@
  * Handles all /riddles API endpoints
  */
 import { sendSuccess, sendError } from "../utils/responseHelper.js";
-import { getAllRiddles, addRiddle, updateRiddle } from "../dal/riddlesDAL.js";
+import { getAllRiddles, addRiddle, updateRiddle, deleteRiddle } from "../dal/riddlesDAL.js";
 
 export function riddlesRoutes(req, res) {
   const { pathname } = req.parsedUrl;
@@ -45,7 +45,15 @@ export function riddlesRoutes(req, res) {
 
   // DELETE /riddles/deleteRiddle
   if (pathname === "/riddles/deleteRiddle" && method === "DELETE") {
-    return sendSuccess(res, { message: "Delete riddle (placeholder)", body: req.body });
+    const { id } = req.body || {};
+    if (!id) {
+      sendError(res, 400, "Missing id in request body");
+      return;
+    }
+    deleteRiddle(id)
+      .then((deleted) => sendSuccess(res, deleted, "Riddle deleted successfully"))
+      .catch((err) => sendError(res, 500, "Failed to delete riddle", err.message));
+    return;
   }
 
   // If no route matched
