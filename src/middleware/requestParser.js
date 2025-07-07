@@ -39,7 +39,7 @@ export function parseRequest(req, res, next) {
   }
 
   // Parse body if needed
-  if (["POST", "PUT", "PATCH"].includes(req.method)) {
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
     let body = "";
     req.on("data", (chunk) => (body += chunk));
     req.on("end", () => {
