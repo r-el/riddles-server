@@ -15,10 +15,15 @@ A Node.js riddles server using vanilla HTTP module and json-file-crud package.
 
 | Method | URL | Description |
 |--------|-----|-------------|
-| GET | `/riddles` | Get all riddles |
-| POST | `/riddles/addRiddle` | Add a new riddle |
-| PUT | `/riddles/updateRiddle` | Update a riddle by ID |
-| DELETE | `/riddles/deleteRiddle` | Delete a riddle by ID |
+| GET    | `/riddles`                | Get all riddles         |
+| POST   | `/riddles/addRiddle`      | Add a new riddle        |
+| PUT    | `/riddles/updateRiddle`   | Update a riddle by ID   |
+| DELETE | `/riddles/deleteRiddle`   | Delete a riddle by ID   |
+
+## Documentation
+
+- Full API documentation: [docs/api.md](docs/api.md)
+- Postman collection: [docs/riddles-server.postman_collection.json](docs/riddles-server.postman_collection.json)
 
 ## Installation
 
@@ -32,7 +37,7 @@ npm install
 # Start the server
 npm start
 
-# Development mode with auto-restart
+# Development mode with auto-restart (if defined)
 npm run dev
 ```
 
@@ -47,14 +52,14 @@ curl http://localhost:3000/riddles
 ```bash
 curl -X POST http://localhost:3000/riddles/addRiddle \
   -H "Content-Type: application/json" \
-  -d '{"question": "What has a head and a tail but no body?", "answer": "A coin"}'
+  -d '{"name": "חידה חדשה", "taskDescription": "מה הולך ובא ולא מגיע אף פעם?", "correctAnswer": "מחר"}'
 ```
 
 ### Update Riddle
 ```bash
 curl -X PUT http://localhost:3000/riddles/updateRiddle \
   -H "Content-Type: application/json" \
-  -d '{"id": 1, "question": "Updated question?", "answer": "Updated answer!"}'
+  -d '{"id": 1, "name": "עודכן", "taskDescription": "עודכן", "correctAnswer": "עודכן"}'
 ```
 
 ### Delete Riddle
@@ -83,13 +88,14 @@ riddles-server/
 │   │   └── requestParser.js
 │   ├── utils/                  # Utility functions
 │   │   ├── responseHelper.js
-│   │   └── validation.js
+│   │   └── riddleValidator.js
 │   └── config/                 # Configuration
 │       └── database.js
 ├── data/
 │   └── riddles.json            # Data storage file
 ├── docs/                       # Documentation
-│   └── api.md
+│   ├── api.md
+│   └── riddles-server.postman_collection.json
 └── package.json
 ```
 
