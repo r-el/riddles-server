@@ -3,7 +3,7 @@
  * Handles all /riddles API endpoints
  */
 import { sendSuccess, sendError } from "../utils/responseHelper.js";
-import { getAllRiddles, addRiddle } from "../dal/riddlesDAL.js";
+import { getAllRiddles, addRiddle, updateRiddle } from "../dal/riddlesDAL.js";
 
 export function riddlesRoutes(req, res) {
   const { pathname } = req.parsedUrl;
@@ -32,7 +32,15 @@ export function riddlesRoutes(req, res) {
 
   // PUT /riddles/updateRiddle
   if (pathname === "/riddles/updateRiddle" && method === "PUT") {
-    return sendSuccess(res, { message: "Update riddle (placeholder)", body: req.body });
+    const { id, name, taskDescription, correctAnswer } = req.body || {};
+    if (!id || !name || !taskDescription || !correctAnswer) {
+      sendError(res, 400, "Missing id, name, taskDescription, or correctAnswer in request body");
+      return;
+    }
+    updateRiddle(id, { name, taskDescription, correctAnswer })
+      .then((updated) => sendSuccess(res, updated, "Riddle updated successfully"))
+      .catch((err) => sendError(res, 500, "Failed to update riddle", err.message));
+    return;
   }
 
   // DELETE /riddles/deleteRiddle
