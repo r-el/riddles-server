@@ -48,3 +48,17 @@ export function updateRiddle(id, updatedFields) {
     });
   });
 }
+
+/**
+ * Delete a riddle by id (async/Promise)
+ * @param {string} id - The id of the riddle to delete
+ * @returns {Promise<Object>} The deleted riddle (or info)
+ */
+export function deleteRiddle(id) {
+  return new Promise((resolve, reject) => {
+    db.delete(id, (err, deleted) => {
+      if (err) return reject(err);
+      resolve(deleted);
+    });
+  });
+}
