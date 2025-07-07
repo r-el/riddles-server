@@ -1,10 +1,9 @@
 /**
  * Riddles Routes
- * Handles all /riddles API endpoints (placeholders for now)
- *
- * Usage: riddlesRoutes(req, res)
+ * Handles all /riddles API endpoints
  */
 import { sendSuccess, sendError } from "../utils/responseHelper.js";
+import { getAllRiddles } from "../dal/riddlesDAL.js";
 
 export function riddlesRoutes(req, res) {
   const { pathname } = req.parsedUrl;
@@ -12,7 +11,10 @@ export function riddlesRoutes(req, res) {
 
   // GET /riddles
   if (pathname === "/riddles" && method === "GET") {
-    return sendSuccess(res, { message: "Get all riddles (placeholder)" });
+    getAllRiddles()
+      .then((riddles) => sendSuccess(res, riddles))
+      .catch((err) => sendError(res, 500, "Failed to fetch riddles", err.message));
+    return;
   }
 
   // POST /riddles/addRiddle
