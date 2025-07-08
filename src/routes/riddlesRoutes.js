@@ -2,7 +2,7 @@
  * Riddles Routes
  * Handles all /riddles API endpoints
  */
-import { sendSuccess, sendError } from "../utils/responseHelper.js";
+import express from "express";
 import {
   getAllRiddlesController,
   addRiddleController,
@@ -10,30 +10,18 @@ import {
   deleteRiddleController,
 } from "../controllers/riddlesController.js";
 
-export function riddlesRoutes(req, res) {
-  const { pathname } = req.parsedUrl;
-  const method = req.method;
+const router = express.Router();
 
-  // GET /riddles
-  if (pathname === "/riddles" && method === "GET") {
-    return getAllRiddlesController(req, res);
-  }
+// GET /riddles
+router.get("/", getAllRiddlesController);
 
-  // POST /riddles/addRiddle
-  if (pathname === "/riddles/addRiddle" && method === "POST") {
-    return addRiddleController(req, res);
-  }
+// POST /riddles/addRiddle
+router.post("/addRiddle", addRiddleController);
 
-  // PUT /riddles/updateRiddle
-  if (pathname === "/riddles/updateRiddle" && method === "PUT") {
-    return updateRiddleController(req, res);
-  }
+// PUT /riddles/updateRiddle
+router.put("/updateRiddle", updateRiddleController);
 
-  // DELETE /riddles/deleteRiddle
-  if (pathname === "/riddles/deleteRiddle" && method === "DELETE") {
-    return deleteRiddleController(req, res);
-  }
+// DELETE /riddles/deleteRiddle
+router.delete("/deleteRiddle", deleteRiddleController);
 
-  // If no route matched
-  sendError(res, 404, `Route ${pathname} not found`);
-}
+export default router;

@@ -4,6 +4,7 @@
  */
 import express from "express";
 import { serverConfig } from "./src/config/database.js";
+import riddlesRouter from "./src/routes/riddlesRoutes.js";
 
 const { port, host } = serverConfig;
 
@@ -25,7 +26,8 @@ app.get("/", (req, res) => {
   });
 });
 
-// The rest of the routes will be migrated in the next steps
+// Riddles API routes
+app.use("/riddles", riddlesRouter);
 
 app.listen(port, host, () => {
   console.log(`Riddles Server running at http://${host}:${port}`);
