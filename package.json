@@ -8,10 +8,17 @@
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
-  "keywords": ["riddles", "server", "nodejs", "crud", "json"],
+  "keywords": [
+    "riddles",
+    "server",
+    "nodejs",
+    "crud",
+    "json"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "express": "^5.1.0",
     "json-file-crud": "^1.1.0"
   }
 }
