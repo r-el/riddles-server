@@ -2,39 +2,31 @@
  * Riddles Server - Main entry point
  * Starts the HTTP server and routes requests
  */
-import http from "http";
-import { parseRequest } from "./src/middleware/requestParser.js";
-import { riddlesRoutes } from "./src/routes/riddlesRoutes.js";
-import { errorHandler } from "./src/middleware/errorHandler.js";
+import express from "express";
 import { serverConfig } from "./src/config/database.js";
 
 const { port, host } = serverConfig;
 
-const server = http.createServer((req, res) => {
-  parseRequest(req, res, () => {
-    try {
-      if (req.parsedUrl.pathname === "/") {
-        res.writeHead(200, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            message: "Welcome to Riddles Server!",
-            endpoints: [
-              "GET /riddles",
-              "POST /riddles/addRiddle",
-              "PUT /riddles/updateRiddle",
-              "DELETE /riddles/deleteRiddle",
-            ],
-          })
-        );
-        return;
-      }
-      riddlesRoutes(req, res);
-    } catch (err) {
-      errorHandler(err, req, res);
-    }
+const app = express();
+
+// body parser middleware
+app.use(express.json());
+
+// Root route
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to Riddles Server!",
+    endpoints: [
+      "GET /riddles",
+      "POST /riddles/addRiddle",
+      "PUT /riddles/updateRiddle",
+      "DELETE /riddles/deleteRiddle",
+    ],
   });
 });
 
-server.listen(port, host, () => {
+// The rest of the routes will be migrated in the next steps
+
+app.listen(port, host, () => {
   console.log(`Riddles Server running at http://${host}:${port}`);
 });
