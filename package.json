@@ -1,7 +1,7 @@
 {
   "name": "riddles-server",
   "version": "1.0.0",
-  "description": "A Node.js riddles server using vanilla HTTP module and json-file-crud",
+  "description": "A Node.js riddles server using Express framework and json-file-crud",
   "main": "server.js",
   "type": "module",
   "scripts": {

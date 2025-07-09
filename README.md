@@ -1,15 +1,15 @@
 # Riddles Server
 
-A Node.js riddles server using vanilla HTTP module and json-file-crud package.
+A Node.js riddles server using Express framework and json-file-crud package.
 
 ## Features
 
-- Built with vanilla Node.js (no Express)
-- Uses only core modules (http, url)
+- Built with Express.js framework
+- RESTful API with Express routing
 - CRUD operations for riddles
 - File-based JSON storage
 - Automatic ID generation
-- RESTful API endpoints
+- Express middleware for error handling
 
 ## API Endpoints
 
