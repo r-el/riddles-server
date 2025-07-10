@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 export const databaseConfig = {
   // Path to the riddles JSON file
   riddlesFilePath: path.join(__dirname, "../../data/riddles.json"),
+  playersFilePath: path.join(__dirname, "../../data/players.json"),
 
   // json-file-crud options
   options: {
