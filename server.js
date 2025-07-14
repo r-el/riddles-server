@@ -5,6 +5,7 @@
 import express from "express";
 import { serverConfig } from "./src/config/database.js";
 import riddlesRouter from "./src/routes/riddlesRoutes.js";
+import playersRouter from "./src/routes/playersRoutes.js";
 import { errorHandler } from "./src/middleware/errorHandler.js";
 
 const { port, host } = serverConfig;
@@ -23,12 +24,20 @@ app.get("/", (req, res) => {
       "POST /riddles/addRiddle",
       "PUT /riddles/updateRiddle",
       "DELETE /riddles/deleteRiddle",
+      "GET /players",
+      "GET /players/:id",
+      "POST /players/addPlayer", 
+      "PUT /players/updatePlayer",
+      "DELETE /players/:id",
     ],
   });
 });
 
 // Riddles API routes
 app.use("/riddles", riddlesRouter);
+
+// Players API routes
+app.use("/players", playersRouter);
 
 // Error handler (should be after all routes)
 app.use(errorHandler);
