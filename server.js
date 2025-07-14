@@ -4,6 +4,7 @@
  */
 import express from "express";
 import { serverConfig } from "./src/config/database.js";
+import rootRouter from "./src/routes/rootRoutes.js";
 import riddlesRouter from "./src/routes/riddlesRoutes.js";
 import playersRouter from "./src/routes/playersRoutes.js";
 import { errorHandler } from "./src/middleware/errorHandler.js";
@@ -15,23 +16,8 @@ const app = express();
 // body parser middleware
 app.use(express.json());
 
-// Root route
-app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Welcome to Riddles Server!",
-    endpoints: [
-      "GET /riddles",
-      "POST /riddles/addRiddle",
-      "PUT /riddles/updateRiddle",
-      "DELETE /riddles/deleteRiddle",
-      "GET /players",
-      "GET /players/:id",
-      "POST /players/addPlayer", 
-      "PUT /players/updatePlayer",
-      "DELETE /players/:id",
-    ],
-  });
-});
+// Root routes
+app.use("/", rootRouter);
 
 // Riddles API routes
 app.use("/riddles", riddlesRouter);
