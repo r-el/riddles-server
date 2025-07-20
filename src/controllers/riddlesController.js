@@ -23,6 +23,18 @@ exports.getAllRiddles = catchAsync(async (req, res) => {
 });
 
 /**
+ * Get a random riddle
+ */
+exports.getRandomRiddle = catchAsync(async (req, res) => {
+  const riddle = await Riddle.findRandom();
+
+  res.json({
+    success: true,
+    data: riddle,
+  });
+});
+
+/**
  * Get riddle by ID
  */
 exports.getRiddleById = catchAsync(async (req, res) => {
