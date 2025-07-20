@@ -1,39 +1,27 @@
 /**
- * @class Player
- * @classdesc Represents a player in the game.
- *
- * @param {string} name - Name of the player
- * @param {number[]} [times=[]] - Array of time durations (in milliseconds) for each riddle solved
- * @param {number|null} [lowestTime=null] - The player's best total time across all riddles
- *
- * @property {number|undefined} id - Unique identifier (set by database)
- * @property {string} name - Player's name
- * @property {number[]} times - Array of time durations for each riddle solved
- * @property {number|null} lowestTime - Best total time for leaderboard
+ * Player Model
+ * Supabase-based model for players
  */
-export default class Player {
-  /**
-   * Creates a new Player instance.
-   * @param {string} name - The name of the player
-   * @param {number[]} [times=[]] - Array of time durations in milliseconds
-   * @param {number|null} [lowestTime=null] - Best total time
-   */
-  constructor(name, times = [], lowestTime = null) {
-    this.name = name;
-    this.times = Array.isArray(times) ? times.filter(Number.isFinite) : [];
-    this.lowestTime = lowestTime;
-  }
+const { supabase } = require("../db/supabase");
+const { ApiError } = require("../middleware/errorHandler");
 
-  /**
-   * Creates a Player instance from a plain object (for API responses)
-   * @param {Object} obj - Object containing player data
-   * @returns {Player} New Player instance
-   */
-  static fromObject(obj) {
-    const player = new Player(obj.name, obj.times, obj.lowestTime);
-    if (obj.id !== undefined) {
-      player.id = obj.id;
-    }
-    return player;
+/**
+ * @class Player
+ * @classdesc Supabase-based model for players
+ *
+ * @param {Object} data - Player data
+ * @param {number} data.id - Unique identifier for the player
+ * @param {string} data.username - Player's username
+ * @param {Date} data.created_at - Timestamp when the player was created
+ * @param {number} [data.best_time=0] - Player's best time in milliseconds
+ */
+class Player {
+  constructor(data) {
+    this.id = data.id;
+    this.username = data.username;
+    this.created_at = data.created_at;
+    this.best_time = data.best_time || 0;
   }
 }
+
+module.exports = Player;
