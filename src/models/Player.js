@@ -205,6 +205,53 @@ class Player {
       throw new ApiError(500, "Failed to get leaderboard: " + error.message);
     }
   }
+
+  /**
+   * Get player's stats and history
+   */
+  static async getPlayerStats(username) {
+    try {
+      // Get player
+      const { data: player, error: playerError } = await supabase
+        .from("players")
+        .select("*")
+        .eq("username", username)
+        .single();
+
+      if (playerError) {
+        if (playerError.code === "PGRST116") throw new ApiError(404, "Player not found");
+
+        throw playerError;
+      }
+
+      // Get player's scores
+      const { data: scores, error: scoresError } = await supabase
+        .from("player_scores")
+        .select("riddle_id, time_to_solve, solved_at")
+        .eq("player_id", player.id)
+        .order("solved_at", { ascending: false });
+
+      if (scoresError) throw scoresError;
+
+      // Calculate stats
+      const totalSolved = scores.length;
+      const avgTime =
+        totalSolved > 0 ? scores.reduce((sum, row) => sum + row.time_to_solve, 0) / totalSolved : 0;
+
+      return {
+        player,
+        stats: {
+          total_solved: totalSolved,
+          avg_time: Math.round(avgTime),
+          best_time: player.best_time,
+        },
+        history: scores,
+      };
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      throw new ApiError(500, "Failed to get player stats: " + error.message);
+    }
+  }
 }
 
 module.exports = Player;
