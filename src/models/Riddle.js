@@ -104,6 +104,22 @@ class Riddle {
     return await this.findById(id);
   }
 
+  /**
+   * Delete riddle by ID
+   */
+  static async deleteById(id) {
+    const collection = getRiddlesCollection();
+
+    if (!ObjectId.isValid(id)) throw new ApiError(400, "Invalid riddle ID format");
+
+    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) throw new ApiError(404, "Riddle not found");
+
+    return { deletedId: id };
+  }
+
+
 }
 
 module.exports = Riddle;
