@@ -10,9 +10,7 @@ const { catchAsync, ApiError } = require("../middleware/errorHandler");
 exports.createPlayer = catchAsync(async (req, res) => {
   const { username } = req.body;
 
-  if (!username) {
-    throw new ApiError(400, "Username is required");
-  }
+  if (!username) throw new ApiError(400, "Username is required");
 
   // Check if player already exists
   const existingPlayer = await Player.findByUsername(username);
@@ -45,5 +43,28 @@ exports.getPlayerByUsername = catchAsync(async (req, res) => {
   res.json({
     success: true,
     data: playerStats,
+  });
+});
+
+/**
+ * Submit a score
+ */
+exports.submitScore = catchAsync(async (req, res) => {
+  const { username, riddleId, timeToSolve } = req.body;
+
+  if (!username || !riddleId || !timeToSolve)
+    throw new ApiError(400, "Missing required fields: username, riddleId, timeToSolve");
+
+  // Find or create player
+  let player = await Player.findByUsername(username);
+
+  if (!player) player = await Player.create(username);
+
+  // Submit score
+  await Player.submitScore(player.id, riddleId, timeToSolve);
+
+  res.json({
+    success: true,
+    message: "Score submitted successfully",
   });
 });
