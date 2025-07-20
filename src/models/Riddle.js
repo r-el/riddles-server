@@ -57,6 +57,24 @@ class Riddle {
     return await collection.findOne({ _id: new ObjectId(id) });
   }
 
+  /**
+   * Get all riddles
+   *
+   * @param {Object} filters - MongoDB query filters
+   * @param {Object} options - Pagination and sorting options
+   * @param {number} [options.limit=50] - Number of riddles to return
+   * @param {number} [options.skip=0] - Number of riddles to skip
+   * @param {Object} [options.sort={ createdAt: -1 }] - Sorting options
+   * @returns {Promise<Array>} - Array of riddle documents
+   * @throws {ApiError} - If no riddles found or invalid parameters
+   */
+  static async findAll(filters = {}, options = {}) {
+    const collection = getRiddlesCollection();
+    const { limit = 50, skip = 0, sort = { createdAt: -1 } } = options;
+
+    return await collection.find(filters).sort(sort).skip(skip).limit(limit).toArray();
+  }
+
 }
 
 module.exports = Riddle;
