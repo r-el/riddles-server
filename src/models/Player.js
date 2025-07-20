@@ -73,6 +73,30 @@ class Player {
     }
   }
 
+  /**
+   * Get all players
+   * 
+   * @param {number} [limit=50] - Maximum number of players to return
+   * @param {number} [offset=0] - Offset for pagination
+   * @returns {Promise<Array<Player>>} - Array of Player instances
+   * @throws {ApiError} - If player retrieval fails
+   */
+  static async findAll(limit = 50, offset = 0) {
+    try {
+      const { data, error } = await supabase
+        .from("players")
+        .select("*")
+        .order("best_time", { ascending: true, nullsFirst: false })
+        .range(offset, offset + limit - 1);
+
+      if (error) throw error;
+
+      return data.map((row) => new Player(row));
+    } catch (error) {
+      throw new ApiError(500, "Failed to get players: " + error.message);
+    }
+  }
+
 }
 
 module.exports = Player;
