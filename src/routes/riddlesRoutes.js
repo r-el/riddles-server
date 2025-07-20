@@ -1,27 +1,29 @@
 /**
  * Riddles Routes
- * Handles all /riddles API endpoints
  */
-import express from "express";
-import {
-  getAllRiddlesController,
-  addRiddleController,
-  updateRiddleController,
-  deleteRiddleController,
-} from "../controllers/riddlesController.js";
-
+const express = require("express");
+const riddlesController = require("../controllers/riddlesController");
 const router = express.Router();
 
-// GET /riddles
-router.get("/", getAllRiddlesController);
+// Get all riddles
+router.get("/", riddlesController.getAllRiddles);
 
-// POST /riddles/addRiddle
-router.post("/addRiddle", addRiddleController);
+// Get random riddle
+router.get("/random", riddlesController.getRandomRiddle);
 
-// PUT /riddles/updateRiddle
-router.put("/updateRiddle", updateRiddleController);
+// Get riddle by ID
+router.get("/:id", riddlesController.getRiddleById);
 
-// DELETE /riddles/deleteRiddle
-router.delete("/deleteRiddle", deleteRiddleController);
+// Create a new riddle
+router.post("/", riddlesController.createRiddle);
 
-export default router;
+// Update a riddle
+router.put("/:id", riddlesController.updateRiddle);
+
+// Delete a riddle
+router.delete("/:id", riddlesController.deleteRiddle);
+
+// Load initial riddles
+router.post("/load-initial", riddlesController.loadInitialRiddles);
+
+module.exports = router;
