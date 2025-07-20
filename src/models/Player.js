@@ -22,6 +22,30 @@ class Player {
     this.created_at = data.created_at;
     this.best_time = data.best_time || 0;
   }
+
+  // Static Methods for Database Operations
+
+  /**
+   * Create a new player
+   */
+  static async create(username) {
+    try {
+      const { data, error } = await supabase.from("players").insert([{ username }]).select().single();
+
+      if (error) {
+        if (error.code === "23505") {
+          // Unique constraint violation
+          throw new ApiError(409, "Username already exists");
+        }
+        throw error;
+      }
+
+      return new Player(data);
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      throw new ApiError(500, "Failed to create player: " + error.message);
+    }
+  }
 }
 
 module.exports = Player;
