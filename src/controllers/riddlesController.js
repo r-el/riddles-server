@@ -52,3 +52,16 @@ exports.createRiddle = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * Update a riddle
+ */
+exports.updateRiddle = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const riddle = await Riddle.updateById(id, req.body);
+
+  res.json({
+    success: true,
+    message: "Riddle updated successfully",
+    data: riddle,
+  });
+});
