@@ -65,3 +65,17 @@ exports.updateRiddle = catchAsync(async (req, res) => {
     data: riddle,
   });
 });
+
+/**
+ * Delete a riddle
+ */
+exports.deleteRiddle = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  await Riddle.deleteById(id);
+
+  res.json({
+    success: true,
+    message: "Riddle deleted successfully",
+    data: { id },
+  });
+});
