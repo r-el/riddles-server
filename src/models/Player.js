@@ -27,7 +27,7 @@ class Player {
 
   /**
    * Create a new player
-   * 
+   *
    * @param {string} username - Player's username
    * @return {Promise<Player>} - Newly created Player instance
    * @throws {ApiError} - If player creation fails
@@ -75,7 +75,7 @@ class Player {
 
   /**
    * Get all players
-   * 
+   *
    * @param {number} [limit=50] - Maximum number of players to return
    * @param {number} [offset=0] - Offset for pagination
    * @returns {Promise<Array<Player>>} - Array of Player instances
@@ -97,6 +97,28 @@ class Player {
     }
   }
 
+  /**
+   * Get player by ID
+   * @param {number} id - Player's ID
+   * @return {Promise<Player|null>} - Player instance or null if not found
+   * @throws {ApiError} - If player lookup fails
+   */
+  static async findById(id) {
+    try {
+      const { data, error } = await supabase.from("players").select("*").eq("id", id).single();
+
+      if (error) {
+        if (error.code === "PGRST116") throw new ApiError(404, "Player not found"); // Record not found
+
+        throw error;
+      }
+
+      return new Player(data);
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      throw new ApiError(500, "Failed to find player: " + error.message);
+    }
+  }
 }
 
 module.exports = Player;
