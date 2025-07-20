@@ -75,6 +75,20 @@ class Riddle {
     return await collection.find(filters).sort(sort).skip(skip).limit(limit).toArray();
   }
 
+  /**
+   * Get random riddle
+   */
+  static async findRandom() {
+    const collection = getRiddlesCollection();
+    const count = await collection.countDocuments();
+
+    if (count === 0) throw new ApiError(404, "No riddles found in database");
+
+    const random = Math.floor(Math.random() * count);
+    const riddle = await collection.find().limit(1).skip(random).toArray();
+    return riddle[0];
+  }
+
 }
 
 module.exports = Riddle;
