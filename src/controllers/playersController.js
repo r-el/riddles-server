@@ -68,3 +68,17 @@ exports.submitScore = catchAsync(async (req, res) => {
     message: "Score submitted successfully",
   });
 });
+
+/**
+ * Get leaderboard
+ */
+exports.getLeaderboard = catchAsync(async (req, res) => {
+  const { limit = 10 } = req.query;
+  const leaderboard = await Player.getLeaderboard(parseInt(limit));
+
+  res.json({
+    success: true,
+    data: leaderboard,
+  });
+});
+
