@@ -27,6 +27,10 @@ class Player {
 
   /**
    * Create a new player
+   * 
+   * @param {string} username - Player's username
+   * @return {Promise<Player>} - Newly created Player instance
+   * @throws {ApiError} - If player creation fails
    */
   static async create(username) {
     try {
