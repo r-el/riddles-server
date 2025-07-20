@@ -119,7 +119,24 @@ class Riddle {
     return { deletedId: id };
   }
 
+  /**
+   * Batch insert riddles for initial setup
+   */
+  static async loadInitial(riddles) {
+    const collection = getRiddlesCollection();
 
+    if (!Array.isArray(riddles) || riddles.length === 0)
+      throw new ApiError(400, "Invalid riddles data. Expected non-empty array");
+
+    const documents = riddles.map((riddle) => new Riddle(riddle).toDocument());
+    const result = await collection.insertMany(documents);
+
+    return {
+      success: true,
+      inserted: result.insertedCount,
+      ids: result.insertedIds,
+    };
+  }
 }
 
 module.exports = Riddle;
