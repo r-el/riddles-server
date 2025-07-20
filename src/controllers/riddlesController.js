@@ -39,3 +39,16 @@ exports.getRiddleById = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * Create a new riddle
+ */
+exports.createRiddle = catchAsync(async (req, res) => {
+  const riddle = await Riddle.create(req.body);
+
+  res.status(201).json({
+    success: true,
+    message: "Riddle created successfully",
+    data: riddle,
+  });
+});
+
