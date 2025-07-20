@@ -33,6 +33,19 @@ class Riddle {
       createdAt: this.createdAt,
     };
   }
+
+  // Static Methods for Database Operations
+
+  /**
+   * Create a new riddle
+   */
+  static async create(data) {
+    const collection = getRiddlesCollection();
+    const riddle = new Riddle(data);
+    const result = await collection.insertOne(riddle.toDocument());
+    return { _id: result.insertedId, ...riddle.toDocument() };
+  }
+
 }
 
 module.exports = Riddle;
