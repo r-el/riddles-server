@@ -1,4 +1,11 @@
-// Riddle model - represents a single riddle object
+/**
+ * Riddle Model
+ * MongoDB-based model for riddles
+ */
+const { ObjectId } = require("mongodb");
+const { getRiddlesCollection } = require("../db/mongodb");
+const { ApiError } = require("../middleware/errorHandler");
+
 /**
  * Creates a new Riddle instance.
  * @param {Object} params
@@ -7,11 +14,25 @@
  * @param {string} params.taskDescription - The text describing the riddle.
  * @param {string} params.correctAnswer - The correct answer to the riddle.
  */
-export class Riddle {
-  constructor({ id, name, taskDescription, correctAnswer }) {
-    this.id = id;
-    this.name = name;
-    this.taskDescription = taskDescription;
-    this.correctAnswer = correctAnswer;
+class Riddle {
+  constructor(data) {
+    this.question = data.question;
+    this.answer = data.answer;
+    this.level = data.level || "medium";
+    this.createdAt = data.createdAt || new Date();
+  }
+
+  /**
+   * Convert to MongoDB document
+   */
+  toDocument() {
+    return {
+      question: this.question,
+      answer: this.answer,
+      level: this.level,
+      createdAt: this.createdAt,
+    };
   }
 }
+
+module.exports = Riddle;
