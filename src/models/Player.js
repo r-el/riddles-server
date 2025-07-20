@@ -53,6 +53,9 @@ class Player {
 
   /**
    * Find player by username
+   * @param {string} username - Player's username
+   * @return {Promise<Player|null>} - Player instance or null if not found
+   * @throws {ApiError} - If player lookup fails
    */
   static async findByUsername(username) {
     try {
