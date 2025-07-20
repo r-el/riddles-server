@@ -1,83 +1,273 @@
 {
   "info": {
-    "_postman_id": "riddles-server-collection-2025",
-    "name": "Riddles Server API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "_postman_id": "riddles-server-v2-2025",
+    "name": "Riddles Server API v2.0",
+    "description": "Complete API collection for Riddles Server with MongoDB and Supabase integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.0.0"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "description": "Base URL for the Riddles Server API"
+    }
+  ],
   "item": [
     {
-      "name": "Get All Riddles",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/riddles",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["riddles"]
+      "name": "System",
+      "item": [
+        {
+          "name": "API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Get API information and available endpoints"
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Check server health and uptime"
+          }
         }
-      }
+      ]
     },
     {
-      "name": "Add Riddle",
-      "request": {
-        "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"name\": \"חידה חדשה\",\n  \"taskDescription\": \"מה הולך ובא ולא מגיע אף פעם?\",\n  \"correctAnswer\": \"מחר\"\n}"
+      "name": "Riddles",
+      "item": [
+        {
+          "name": "Get All Riddles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/riddles?limit=10&level=easy",
+              "host": ["{{baseUrl}}"],
+              "path": ["riddles"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of riddles to return"
+                },
+                {
+                  "key": "level",
+                  "value": "easy",
+                  "description": "Filter by difficulty level",
+                  "disabled": true
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Number of riddles to skip",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get all riddles with optional pagination and filtering"
+          }
         },
-        "url": {
-          "raw": "http://localhost:3000/riddles/addRiddle",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["riddles", "addRiddle"]
+        {
+          "name": "Get Random Riddle",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/riddles/random",
+              "host": ["{{baseUrl}}"],
+              "path": ["riddles", "random"]
+            },
+            "description": "Get a randomly selected riddle"
+          }
+        },
+        {
+          "name": "Get Riddle by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/riddles/507f1f77bcf86cd799439011",
+              "host": ["{{baseUrl}}"],
+              "path": ["riddles", "507f1f77bcf86cd799439011"]
+            },
+            "description": "Get a specific riddle by MongoDB ObjectId"
+          }
+        },
+        {
+          "name": "Create Riddle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What has keys but cannot open locks?\",\n  \"answer\": \"Piano\",\n  \"level\": \"easy\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/riddles",
+              "host": ["{{baseUrl}}"],
+              "path": ["riddles"]
+            },
+            "description": "Create a new riddle"
+          }
+        },
+        {
+          "name": "Update Riddle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What has keys but cannot open locks?\",\n  \"answer\": \"Keyboard\",\n  \"level\": \"medium\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/riddles/507f1f77bcf86cd799439011",
+              "host": ["{{baseUrl}}"],
+              "path": ["riddles", "507f1f77bcf86cd799439011"]
+            },
+            "description": "Update an existing riddle by ID"
+          }
+        },
+        {
+          "name": "Delete Riddle",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/riddles/507f1f77bcf86cd799439011",
+              "host": ["{{baseUrl}}"],
+              "path": ["riddles", "507f1f77bcf86cd799439011"]
+            },
+            "description": "Delete a riddle by ID"
+          }
+        },
+        {
+          "name": "Load Initial Riddles",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"riddles\": [\n    {\n      \"question\": \"What has keys but cannot open locks?\",\n      \"answer\": \"Piano\",\n      \"level\": \"easy\"\n    },\n    {\n      \"question\": \"What goes up but never comes down?\",\n      \"answer\": \"Age\",\n      \"level\": \"medium\"\n    },\n    {\n      \"question\": \"What is so fragile that saying its name breaks it?\",\n      \"answer\": \"Silence\",\n      \"level\": \"hard\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/riddles/load-initial",
+              "host": ["{{baseUrl}}"],
+              "path": ["riddles", "load-initial"]
+            },
+            "description": "Bulk load multiple riddles at once"
+          }
         }
-      }
+      ]
     },
     {
-      "name": "Update Riddle",
-      "request": {
-        "method": "PUT",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"id\": 1,\n  \"name\": \"עודכן\",\n  \"taskDescription\": \"עודכן\",\n  \"correctAnswer\": \"עודכן\"\n}"
+      "name": "Players",
+      "item": [
+        {
+          "name": "Create Player",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"player1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/players",
+              "host": ["{{baseUrl}}"],
+              "path": ["players"]
+            },
+            "description": "Create a new player account"
+          }
         },
-        "url": {
-          "raw": "http://localhost:3000/riddles/updateRiddle",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["riddles", "updateRiddle"]
-        }
-      }
-    },
-    {
-      "name": "Delete Riddle",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"id\": 1\n}"
+        {
+          "name": "Get Player Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/players/player1",
+              "host": ["{{baseUrl}}"],
+              "path": ["players", "player1"]
+            },
+            "description": "Get detailed statistics and history for a player"
+          }
         },
-        "url": {
-          "raw": "http://localhost:3000/riddles/deleteRiddle",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["riddles", "deleteRiddle"]
+        {
+          "name": "Submit Score",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"player1\",\n  \"riddleId\": \"507f1f77bcf86cd799439011\",\n  \"timeToSolve\": 5000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/players/submit-score",
+              "host": ["{{baseUrl}}"],
+              "path": ["players", "submit-score"]
+            },
+            "description": "Submit a player's solving time for a riddle"
+          }
+        },
+        {
+          "name": "Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/players/leaderboard?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["players", "leaderboard"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of top players to return"
+                }
+              ]
+            },
+            "description": "Get top players ranked by best solving times"
+          }
         }
-      }
+      ]
     }
   ]
 }
