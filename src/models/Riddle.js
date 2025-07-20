@@ -89,6 +89,21 @@ class Riddle {
     return riddle[0];
   }
 
+  /**
+   * Update riddle by ID
+   */
+  static async updateById(id, updateData) {
+    const collection = getRiddlesCollection();
+
+    if (!ObjectId.isValid(id)) throw new ApiError(400, "Invalid riddle ID format");
+
+    const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: updateData });
+
+    if (result.matchedCount === 0) throw new ApiError(404, "Riddle not found");
+
+    return await this.findById(id);
+  }
+
 }
 
 module.exports = Riddle;
