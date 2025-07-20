@@ -2,11 +2,11 @@
   "name": "riddles-server",
   "version": "1.0.0",
   "description": "A Node.js riddles server using Express framework and json-file-crud",
-  "main": "server.js",
-  "type": "module",
+  "main": "index.js",
+  "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
   "keywords": [
     "riddles",
