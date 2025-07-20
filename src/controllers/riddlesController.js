@@ -22,3 +22,20 @@ exports.getAllRiddles = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * Get riddle by ID
+ */
+exports.getRiddleById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const riddle = await Riddle.findById(id);
+
+  if (!riddle) {
+    throw new ApiError(404, "Riddle not found");
+  }
+
+  res.json({
+    success: true,
+    data: riddle,
+  });
+});
+
