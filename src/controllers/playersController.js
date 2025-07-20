@@ -34,3 +34,16 @@ exports.createPlayer = catchAsync(async (req, res) => {
     data: player,
   });
 });
+
+/**
+ * Get player by username
+ */
+exports.getPlayerByUsername = catchAsync(async (req, res) => {
+  const { username } = req.params;
+  const playerStats = await Player.getPlayerStats(username);
+
+  res.json({
+    success: true,
+    data: playerStats,
+  });
+});
