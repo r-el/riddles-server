@@ -1,88 +1,100 @@
-import { getAllRiddles, addRiddle, updateRiddle, deleteRiddle } from "../dal/riddlesDAL.js";
-import { validateRiddleData, validateRiddleId } from "../utils/riddleValidator.js";
-import { Riddle } from "../models/Riddle.js";
-import { sendSuccess, sendError } from "../utils/responseHelper.js";
+/**
+ * Riddles Controller
+ */
+const Riddle = require("../models/Riddle");
+const { catchAsync, ApiError } = require("../middleware/errorHandler");
 
 /**
- * Controller: Get all riddles
- * @route GET /riddles
- * @param {IncomingMessage} req
- * @param {ServerResponse} res
+ * Get all riddles
  */
-export async function getAllRiddlesController(req, res) {
-  try {
-    const riddles = await getAllRiddles();
-    sendSuccess(res, riddles);
-  } catch (err) {
-    sendError(res, 500, "Failed to fetch riddles", err.message);
-  }
-}
+exports.getAllRiddles = catchAsync(async (req, res) => {
+  const { level, limit = 50, skip = 0 } = req.query;
+  const filters = {};
+
+  if (level) filters.level = level;
+
+  const riddles = await Riddle.findAll(filters, { limit: parseInt(limit), skip: parseInt(skip) });
+
+  res.json({
+    success: true,
+    count: riddles.length,
+    data: riddles,
+  });
+});
 
 /**
- * Controller: Add a new riddle
- * @route POST /riddles/addRiddle
- * @param {IncomingMessage} req
- * @param {ServerResponse} res
+ * Get riddle by ID
  */
-export async function addRiddleController(req, res) {
-  const validationError = validateRiddleData(req.body);
-  if (validationError) {
-    sendError(res, 400, validationError);
-    return;
+exports.getRiddleById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const riddle = await Riddle.findById(id);
+
+  if (!riddle) {
+    throw new ApiError(404, "Riddle not found");
   }
-  try {
-    const riddle = new Riddle(req.body);
-    const created = await addRiddle(riddle);
-    sendSuccess(res, created, "Riddle added successfully");
-  } catch (err) {
-    sendError(res, 500, "Failed to add riddle", err.message);
-  }
-}
+
+  res.json({
+    success: true,
+    data: riddle,
+  });
+});
 
 /**
- * Controller: Update an existing riddle
- * @route PUT /riddles/updateRiddle
- * @param {IncomingMessage} req
- * @param {ServerResponse} res
+ * Create a new riddle
  */
-export async function updateRiddleController(req, res) {
-  const { id, name, taskDescription, correctAnswer } = req.body || {};
-  const idError = validateRiddleId(id);
-  if (idError) {
-    sendError(res, 400, idError);
-    return;
-  }
-  const dataError = validateRiddleData({ name, taskDescription, correctAnswer });
-  if (dataError) {
-    sendError(res, 400, dataError);
-    return;
-  }
-  try {
-    const riddle = new Riddle({ id, name, taskDescription, correctAnswer });
-    const updated = await updateRiddle(id, riddle);
-    sendSuccess(res, updated, "Riddle updated successfully");
-  } catch (err) {
-    sendError(res, 500, "Failed to update riddle", err.message);
-  }
-}
+exports.createRiddle = catchAsync(async (req, res) => {
+  const riddle = await Riddle.create(req.body);
+
+  res.status(201).json({
+    success: true,
+    message: "Riddle created successfully",
+    data: riddle,
+  });
+});
 
 /**
- * Controller: Delete a riddle by id
- * @route DELETE /riddles/deleteRiddle
- * @param {IncomingMessage} req
- * @param {ServerResponse} res
+ * Update a riddle
  */
-export async function deleteRiddleController(req, res) {
-  const { id } = req.body || {};
-  const idError = validateRiddleId(id);
-  if (idError) {
-    sendError(res, 400, idError);
-    return;
+exports.updateRiddle = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const riddle = await Riddle.updateById(id, req.body);
+
+  res.json({
+    success: true,
+    message: "Riddle updated successfully",
+    data: riddle,
+  });
+});
+
+/**
+ * Delete a riddle
+ */
+exports.deleteRiddle = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  await Riddle.deleteById(id);
+
+  res.json({
+    success: true,
+    message: "Riddle deleted successfully",
+    data: { id },
+  });
+});
+
+/**
+ * Load initial riddles
+ */
+exports.loadInitialRiddles = catchAsync(async (req, res) => {
+  const { riddles } = req.body;
+
+  if (!riddles || !Array.isArray(riddles) || riddles.length === 0) {
+    throw new ApiError(400, "No riddles provided or invalid format");
   }
-  try {
-    const deleted = await deleteRiddle(id);
-    sendSuccess(res, deleted, "Riddle deleted successfully");
-  } catch (err) {
-    sendError(res, 500, "Failed to delete riddle", err.message);
-  }
-}
+
+  const result = await Riddle.loadInitial(riddles);
+
+  res.status(201).json({
+    success: true,
+    message: `Successfully loaded ${result.inserted} riddles`,
+    data: result,
+  });
+});
