@@ -46,6 +46,26 @@ class Player {
       throw new ApiError(500, "Failed to create player: " + error.message);
     }
   }
+
+  /**
+   * Find player by username
+   */
+  static async findByUsername(username) {
+    try {
+      const { data, error } = await supabase.from("players").select("*").eq("username", username).single();
+
+      if (error) {
+        if (error.code === "PGRST116") return null; // Record not found
+
+        throw error;
+      }
+
+      return data ? new Player(data) : null;
+    } catch (error) {
+      throw new ApiError(500, "Failed to find player: " + error.message);
+    }
+  }
+
 }
 
 module.exports = Player;
