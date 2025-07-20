@@ -79,3 +79,22 @@ exports.deleteRiddle = catchAsync(async (req, res) => {
     data: { id },
   });
 });
+
+/**
+ * Load initial riddles
+ */
+exports.loadInitialRiddles = catchAsync(async (req, res) => {
+  const { riddles } = req.body;
+
+  if (!riddles || !Array.isArray(riddles) || riddles.length === 0) {
+    throw new ApiError(400, "No riddles provided or invalid format");
+  }
+
+  const result = await Riddle.loadInitial(riddles);
+
+  res.status(201).json({
+    success: true,
+    message: `Successfully loaded ${result.inserted} riddles`,
+    data: result,
+  });
+});
