@@ -46,6 +46,17 @@ class Riddle {
     return { _id: result.insertedId, ...riddle.toDocument() };
   }
 
+  /**
+   * Find riddle by ID
+   */
+  static async findById(id) {
+    const collection = getRiddlesCollection();
+
+    if (!ObjectId.isValid(id)) throw new ApiError(400, "Invalid riddle ID format");
+
+    return await collection.findOne({ _id: new ObjectId(id) });
+  }
+
 }
 
 module.exports = Riddle;
