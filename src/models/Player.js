@@ -119,6 +119,49 @@ class Player {
       throw new ApiError(500, "Failed to find player: " + error.message);
     }
   }
+
+  /**
+   * Submit a score for a player and riddle
+   *
+   * @param {number} playerId - Player's ID
+   * @param {number} riddleId - Riddle's ID
+   * @param {number} timeToSolve - Time taken to solve the riddle in milliseconds
+   * @returns {Promise<Object>} - Result of the score submission
+   * @throws {ApiError || superbaseError} - If score submission fails
+   */
+  static async submitScore(playerId, riddleId, timeToSolve) {
+    try {
+      // Insert the score
+      const { error: scoreError } = await supabase
+        .from("player_scores")
+        .insert([{ player_id: playerId, riddle_id: riddleId, time_to_solve: timeToSolve }]);
+
+      if (scoreError) throw scoreError;
+
+      // Get current best time
+      const { data: playerData, error: playerError } = await supabase
+        .from("players")
+        .select("best_time")
+        .eq("id", playerId)
+        .single();
+
+      if (playerError) throw playerError;
+
+      // Update best time if applicable
+      if (playerData.best_time === 0 || timeToSolve < playerData.best_time) {
+        const { error: updateError } = await supabase
+          .from("players")
+          .update({ best_time: timeToSolve })
+          .eq("id", playerId);
+
+        if (updateError) throw updateError;
+      }
+
+      return { success: true };
+    } catch (error) {
+      throw new ApiError(500, "Failed to submit score: " + error.message);
+    }
+  }
 }
 
 module.exports = Player;
