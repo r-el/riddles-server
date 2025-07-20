@@ -162,6 +162,49 @@ class Player {
       throw new ApiError(500, "Failed to submit score: " + error.message);
     }
   }
+
+  /**
+   * Get leaderboard (top players by best time)
+   *
+   * @param {number} [limit=10] - Number of players to return
+   * @returns {Promise<Array>} - Array of player objects with id, username, best_time, and riddles_solved
+   * @throws {ApiError || superbaseError} - If leaderboard retrieval fails
+   */
+  static async getLeaderboard(limit = 10) {
+    try {
+      // First get players with best times
+      const { data: players, error: playersError } = await supabase
+        .from("players")
+        .select("id, username, best_time")
+        .not("best_time", "eq", 0)
+        .order("best_time", { ascending: true })
+        .limit(limit);
+
+      if (playersError) throw playersError;
+
+      // Get riddles solved count for each player
+      const playersWithRiddleCounts = await Promise.all(
+        players.map(async (player) => {
+          const { count, error: countError } = await supabase
+
+            .from("player_scores")
+            .select("*", { count: "exact", head: true }) // exact for accurate count, head to avoid returning rows
+            .eq("player_id", player.id);
+
+          if (countError) throw countError;
+
+          return {
+            ...player,
+            riddles_solved: count || 0,
+          };
+        })
+      );
+
+      return playersWithRiddleCounts;
+    } catch (error) {
+      throw new ApiError(500, "Failed to get leaderboard: " + error.message);
+    }
+  }
 }
 
 module.exports = Player;
