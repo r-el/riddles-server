@@ -1,7 +1,7 @@
 {
   "name": "riddles-server",
   "version": "1.0.0",
-  "description": "A Node.js riddles server using Express framework and json-file-crud",
+  "description": "A Node.js riddles server using Express framework with MongoDB and Supabase",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
@@ -12,8 +12,9 @@
     "riddles",
     "server",
     "nodejs",
-    "crud",
-    "json"
+    "mongodb",
+    "supabase",
+    "rest-api"
   ],
   "author": "",
   "license": "MIT",
@@ -24,7 +25,6 @@
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
-    "json-file-crud": "^1.1.0",
     "mongodb": "^6.17.0"
   }
 }
