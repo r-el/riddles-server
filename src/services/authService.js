@@ -4,9 +4,11 @@
  * Implements SOLID principles with single responsibility for auth operations
  */
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Configuration constants
 const SALT_ROUNDS = 10;
+const DEFAULT_TOKEN_EXPIRATION = process.env.JWT_EXPIRES_IN || "7d";
 
 /**
  * Hash a password using bcrypt
@@ -43,7 +45,39 @@ async function comparePassword(password, hash) {
   }
 }
 
+/**
+ * Generate a JWT token for a user
+ *
+ * @param {Object} user - User object
+ * @param {number} user.id - User ID
+ * @param {string} user.username - Username
+ * @param {string} user.role - User role
+ * @returns {string} - JWT token
+ * @throws {Error} - If token generation fails
+ */
+function generateToken(user) {
+  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not configured in environment variables");
+
+  if (!user || !user.id || !user.username || !user.role)
+    throw new Error("User object must contain id, username, and role");
+
+  try {
+    const payload = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    };
+
+    const expiresIn = DEFAULT_TOKEN_EXPIRATION;
+
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
+  } catch (error) {
+    throw new Error("Failed to generate token: " + error.message);
+  }
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
+  generateToken,
 };
