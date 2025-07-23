@@ -102,9 +102,21 @@ function verifyToken(token) {
   }
 }
 
+/**
+ * Validate user role
+ *
+ * @param {string} role - Role to validate
+ * @returns {boolean} - True if role is valid
+ */
+function isValidRole(role) {
+  const validRoles = ["guest", "user", "admin"];
+  return validRoles.includes(role);
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
   generateToken,
   verifyToken,
+  isValidRole,
 };
