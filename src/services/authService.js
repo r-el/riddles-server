@@ -192,6 +192,63 @@ async function registerUser(username, password, adminCode = null) {
   }
 }
 
+/**
+ * Login a user with username and password
+ *
+ * @param {string} username - Username
+ * @param {string} password - Password
+ * @returns {Promise<Object>} - User object with token
+ * @throws {ApiError} - If login fails
+ */
+async function loginUser(username, password) {
+  // Input validation
+  if (!username || !password) throw new ApiError(400, "Username and password are required");
+
+  try {
+    // Find user by username
+    const { data: user, error: userError } = await supabase
+      .from("players")
+      .select("id, username, password_hash, role, created_at")
+      .eq("username", username)
+      .single();
+
+    if (userError) {
+      if (userError.code === "PGRST116") {
+        throw new ApiError(401, "Invalid username or password");
+      }
+      throw new ApiError(500, "Failed to find user: " + userError.message);
+    }
+
+    // Check if user has a password (not a legacy user)
+    if (!user.password_hash)
+      throw new ApiError(401, "User exists but has no password set. Please contact administrator.");
+
+    // Verify password
+    const isPasswordValid = await comparePassword(password, user.password_hash);
+    if (!isPasswordValid) {
+      throw new ApiError(401, "Invalid username or password");
+    }
+
+    // Generate token
+    const token = generateToken(user);
+
+    return {
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+        created_at: user.created_at,
+      },
+      token,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, "Login failed: " + error.message);
+  }
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
@@ -199,4 +256,5 @@ module.exports = {
   verifyToken,
   isValidRole,
   registerUser,
+  loginUser,
 };
