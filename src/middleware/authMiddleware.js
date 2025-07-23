@@ -155,11 +155,23 @@ function optionalAuth() {
   return authenticate({ required: false });
 }
 
+/**
+ * Combined authentication and authorization middleware
+ * Authenticates user and checks role in one step
+ *
+ * @param {...string} allowedRoles - Roles that are allowed
+ * @returns {Function} - Express middleware function
+ */
+function authAndAuthorize(...allowedRoles) {
+  return [authenticate({ required: true }), authorize(...allowedRoles)];
+}
+
 module.exports = {
   authenticate,
   authorize,
   requireUserOrAdmin,
   requireAdmin,
   optionalAuth,
+  authAndAuthorize,
   extractToken,
 };
