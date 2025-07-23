@@ -123,6 +123,11 @@ function authorize(...allowedRoles) {
 }
 
 /**
+ * Role-specific middleware shortcuts
+ * Convenience functions for common authorization patterns
+ */
+
+/**
  * Middleware that requires user or admin role
  *
  * @returns {Function} - Express middleware function
@@ -131,9 +136,19 @@ function requireUserOrAdmin() {
   return authorize("user", "admin");
 }
 
+/**
+ * Middleware that requires admin role only
+ *
+ * @returns {Function} - Express middleware function
+ */
+function requireAdmin() {
+  return authorize("admin");
+}
+
 module.exports = {
   authenticate,
   authorize,
   requireUserOrAdmin,
+  requireAdmin,
   extractToken,
 };
