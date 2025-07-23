@@ -34,5 +34,11 @@ router.post("/logout", authenticate(), authController.logout);
 // Change password (bonus feature)
 router.put("/change-password", authenticate(), authController.changePassword);
 
+/**
+ * Admin-only routes
+ */
+
+// Get authentication statistics
+router.get("/stats", authenticate(), requireAdmin(), authController.getAuthStats);
 
 module.exports = router;
