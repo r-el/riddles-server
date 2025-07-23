@@ -56,3 +56,25 @@ exports.login = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+/**
+ * Get current user profile
+ *
+ * @route GET /auth/profile
+ * @access Private (requires authentication)
+ */
+exports.getProfile = catchAsync(async (req, res) => {
+  // User data is already available from auth middleware
+  const { id, username, role } = req.user;
+
+  res.json({
+    success: true,
+    message: "Profile retrieved successfully",
+    data: {
+      id,
+      username,
+      role,
+      tokenExpiry: req.tokenData?.exp ? new Date(req.tokenData.exp * 1000) : null,
+    },
+  });
+});
