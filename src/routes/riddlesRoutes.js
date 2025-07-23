@@ -1,29 +1,31 @@
 /**
  * Riddles Routes
+ * Including authentication and authorization middleware
  */
 const express = require("express");
 const riddlesController = require("../controllers/riddlesController");
+const { authenticate, requireUserOrAdmin, requireAdmin } = require("../middleware/authMiddleware");
 const router = express.Router();
 
-// Get all riddles
-router.get("/", riddlesController.getAllRiddles);
+// Get all riddles - requires user or admin authentication
+router.get("/", authenticate(), requireUserOrAdmin(), riddlesController.getAllRiddles);
 
-// Get random riddle
+// Get random riddle - public access (anyone can play)
 router.get("/random", riddlesController.getRandomRiddle);
 
-// Get riddle by ID
-router.get("/:id", riddlesController.getRiddleById);
+// Get riddle by ID - requires user or admin authentication
+router.get("/:id", authenticate(), requireUserOrAdmin(), riddlesController.getRiddleById);
 
-// Create a new riddle
-router.post("/", riddlesController.createRiddle);
+// Create a new riddle - requires user or admin authentication
+router.post("/", authenticate(), requireUserOrAdmin(), riddlesController.createRiddle);
 
-// Update a riddle
-router.put("/:id", riddlesController.updateRiddle);
+// Update a riddle - requires admin authentication only
+router.put("/:id", authenticate(), requireAdmin(), riddlesController.updateRiddle);
 
-// Delete a riddle
-router.delete("/:id", riddlesController.deleteRiddle);
+// Delete a riddle - requires admin authentication only
+router.delete("/:id", authenticate(), requireAdmin(), riddlesController.deleteRiddle);
 
-// Load initial riddles
-router.post("/load-initial", riddlesController.loadInitialRiddles);
+// Load initial riddles - requires admin authentication only
+router.post("/load-initial", authenticate(), requireAdmin(), riddlesController.loadInitialRiddles);
 
 module.exports = router;
