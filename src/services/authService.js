@@ -6,6 +6,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { ApiError } = require("../middleware/errorHandler");
+const { supabase } = require("../db/supabase");
 
 // Configuration constants
 const SALT_ROUNDS = 10;
@@ -113,10 +114,89 @@ function isValidRole(role) {
   return validRoles.includes(role);
 }
 
+/**
+ * Register a new user
+ *
+ * @param {string} username - Username
+ * @param {string} password - Password
+ * @param {string} [adminCode] - Optional admin code for admin registration
+ * @returns {Promise<Object>} - User object with token
+ * @throws {ApiError} - If registration fails
+ */
+async function registerUser(username, password, adminCode = null) {
+  // Input validation
+  if (!username || !password) throw new ApiError(400, "Username and password are required");
+
+  if (username.length < 3) throw new ApiError(400, "Username must be at least 3 characters long");
+  if (password.length < 6) throw new ApiError(400, "Password must be at least 6 characters long");
+
+  try {
+    // Check if username already exists
+    const { data: existingUser, error: searchError } = await supabase
+      .from("players")
+      .select("id")
+      .eq("username", username)
+      .single();
+
+    if (searchError && searchError.code !== "PGRST116")
+      throw new ApiError(500, "Failed to check username availability");
+
+    if (existingUser) throw new ApiError(409, "Username already exists");
+
+    // Hash the password
+    const passwordHash = await hashPassword(password);
+
+    // Determine role
+    let role = "user";
+    if (adminCode && adminCode === process.env.ADMIN_SECRET_CODE) {
+      role = "admin";
+    }
+
+    // Create user in database
+    const { data: newUser, error: createError } = await supabase
+      .from("players")
+      .insert([
+        {
+          username,
+          password_hash: passwordHash,
+          role,
+        },
+      ])
+      .select("id, username, role, created_at")
+      .single();
+
+    if (createError) {
+      if (createError.code === "23505") {
+        throw new ApiError(409, "Username already exists");
+      }
+      throw new ApiError(500, "Failed to create user: " + createError.message);
+    }
+
+    // Generate token
+    const token = generateToken(newUser);
+
+    return {
+      user: {
+        id: newUser.id,
+        username: newUser.username,
+        role: newUser.role,
+        created_at: newUser.created_at,
+      },
+      token,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, "Registration failed: " + error.message);
+  }
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
   generateToken,
   verifyToken,
   isValidRole,
+  registerUser,
 };
