@@ -5,6 +5,7 @@
  */
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { ApiError } = require("../middleware/errorHandler");
 
 // Configuration constants
 const SALT_ROUNDS = 10;
@@ -76,8 +77,34 @@ function generateToken(user) {
   }
 }
 
+/**
+ * Verify and decode a JWT token
+ *
+ * @param {string} token - JWT token to verify
+ * @returns {Object} - Decoded token payload
+ * @throws {ApiError} - If token is invalid or expired
+ */
+function verifyToken(token) {
+  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not configured in environment variables");
+
+  if (!token || typeof token !== "string") throw new ApiError(401, "Invalid token format");
+
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      throw new ApiError(401, "Token has expired");
+    } else if (error.name === "JsonWebTokenError") {
+      throw new ApiError(401, "Invalid token");
+    } else {
+      throw new ApiError(401, "Token verification failed");
+    }
+  }
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
   generateToken,
+  verifyToken,
 };
