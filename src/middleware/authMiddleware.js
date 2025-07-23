@@ -92,7 +92,38 @@ function authenticate(options = {}) {
   };
 }
 
+/**
+ * Authorization middleware factory
+ * Creates middleware that checks if authenticated user has required role(s)
+ *
+ * @param {...string} allowedRoles - Roles that are allowed to access the resource
+ * @returns {Function} - Express middleware function
+ */
+function authorize(...allowedRoles) {
+  return (req, res, next) => {
+    // Check if user is authenticated
+    if (!req.user) {
+      return next(new ApiError(401, "Authentication required for authorization"));
+    }
+
+    // If no roles specified, allow any authenticated user
+    if (allowedRoles.length === 0) {
+      return next();
+    }
+
+    // Check if user's role is in the allowed roles
+    if (allowedRoles.includes(req.user.role)) {
+      return next();
+    }
+
+    // User doesn't have required role
+    const message = `Access denied. Required role: ${allowedRoles.join(" or ")}. Your role: ${req.user.role}`;
+    next(new ApiError(403, message));
+  };
+}
+
 module.exports = {
   authenticate,
+  authorize,
   extractToken,
 };
