@@ -78,3 +78,24 @@ exports.getProfile = catchAsync(async (req, res) => {
     },
   });
 });
+
+/**
+ * Validate token endpoint (useful for client-side token validation)
+ *
+ * @route POST /auth/validate
+ * @access Private (requires authentication)
+ */
+exports.validateToken = catchAsync(async (req, res) => {
+  // If we reach here, token is valid (middleware already validated it)
+  const { id, username, role } = req.user;
+
+  res.json({
+    success: true,
+    message: "Token is valid",
+    data: {
+      valid: true,
+      user: { id, username, role },
+      expiresAt: req.tokenData?.exp ? new Date(req.tokenData.exp * 1000) : null,
+    },
+  });
+});
