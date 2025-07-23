@@ -119,3 +119,26 @@ exports.logout = catchAsync(async (req, res) => {
     message: "Logout successful. Please remove token from client storage.",
   });
 });
+
+/**
+ * Change password endpoint (bonus feature)
+ *
+ * @route PUT /auth/change-password
+ * @access Private (requires authentication)
+ * @param {Object} req.body - Request body
+ * @param {string} req.body.currentPassword - Current password
+ * @param {string} req.body.newPassword - New password (6+ characters)
+ */
+exports.changePassword = catchAsync(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.id;
+
+  if (!currentPassword || !newPassword)
+    throw new ApiError(400, "Current password and new password are required");
+
+  if (newPassword.length < 6) throw new ApiError(400, "New password must be at least 6 characters long");
+
+  // This would require implementing changePassword in authService
+  // For now, we'll just return a placeholder response
+  throw new ApiError(501, "Password change feature not implemented yet");
+});
