@@ -36,10 +36,12 @@ app.use(requestLogger);
 const rootRoutes = require("./routes/rootRoutes");
 const riddlesRoutes = require("./routes/riddlesRoutes");
 const playersRoutes = require("./routes/playersRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.use("/", rootRoutes);
 app.use("/riddles", riddlesRoutes);
 app.use("/players", playersRoutes);
+app.use("/auth", authRoutes);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
