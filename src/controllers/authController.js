@@ -142,3 +142,23 @@ exports.changePassword = catchAsync(async (req, res) => {
   // For now, we'll just return a placeholder response
   throw new ApiError(501, "Password change feature not implemented yet");
 });
+
+/**
+ * Get authentication statistics (admin only)
+ *
+ * @route GET /auth/stats
+ * @access Private (admin only)
+ */
+exports.getAuthStats = catchAsync(async (req, res) => {
+  // This would require implementing stats collection
+  // For now, return basic info
+  res.json({
+    success: true,
+    message: "Authentication statistics",
+    data: {
+      feature: "Admin authentication statistics",
+      status: "Not implemented yet",
+      suggestion: "Could include user count by role, recent registrations, etc.",
+    },
+  });
+});
