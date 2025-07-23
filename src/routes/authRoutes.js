@@ -18,4 +18,11 @@ router.post("/register", authController.register);
 // User login
 router.post("/login", authController.login);
 
+/**
+ * Protected authentication routes (authentication required)
+ */
+
+// Get current user profile
+router.get("/profile", authenticate(), authController.getProfile);
+
 module.exports = router;
