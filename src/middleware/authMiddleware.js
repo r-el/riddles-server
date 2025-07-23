@@ -145,10 +145,21 @@ function requireAdmin() {
   return authorize("admin");
 }
 
+/**
+ * Middleware that allows optional authentication
+ * Sets req.user to guest if no token provided
+ *
+ * @returns {Function} - Express middleware function
+ */
+function optionalAuth() {
+  return authenticate({ required: false });
+}
+
 module.exports = {
   authenticate,
   authorize,
   requireUserOrAdmin,
   requireAdmin,
+  optionalAuth,
   extractToken,
 };
