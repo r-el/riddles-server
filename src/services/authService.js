@@ -249,6 +249,38 @@ async function loginUser(username, password) {
   }
 }
 
+/**
+ * Validate user exists and get user data by ID
+ * Used by authentication middleware
+ *
+ * @param {number} userId - User ID from token
+ * @returns {Promise<Object|null>} - User data or null if not found
+ * @throws {ApiError} - If database error occurs
+ */
+async function getUserById(userId) {
+  try {
+    const { data: user, error } = await supabase
+      .from("players")
+      .select("id, username, role")
+      .eq("id", userId)
+      .single();
+
+    if (error) {
+      if (error.code === "PGRST116") {
+        return null; // User not found
+      }
+      throw new ApiError(500, "Failed to validate user: " + error.message);
+    }
+
+    return user;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, "User validation failed: " + error.message);
+  }
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
@@ -257,4 +289,5 @@ module.exports = {
   isValidRole,
   registerUser,
   loginUser,
+  getUserById,
 };
