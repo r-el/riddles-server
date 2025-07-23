@@ -25,4 +25,7 @@ router.post("/login", authController.login);
 // Get current user profile
 router.get("/profile", authenticate(), authController.getProfile);
 
+// Validate current token
+router.post("/validate", authenticate(), authController.validateToken);
+
 module.exports = router;
