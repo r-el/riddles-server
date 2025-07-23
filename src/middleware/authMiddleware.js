@@ -122,8 +122,18 @@ function authorize(...allowedRoles) {
   };
 }
 
+/**
+ * Middleware that requires user or admin role
+ *
+ * @returns {Function} - Express middleware function
+ */
+function requireUserOrAdmin() {
+  return authorize("user", "admin");
+}
+
 module.exports = {
   authenticate,
   authorize,
+  requireUserOrAdmin,
   extractToken,
 };
