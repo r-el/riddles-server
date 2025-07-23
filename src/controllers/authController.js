@@ -99,3 +99,23 @@ exports.validateToken = catchAsync(async (req, res) => {
     },
   });
 });
+
+/**
+ * Logout endpoint (client-side token removal)
+ * Since we're using stateless JWT, actual logout is handled client-side
+ * This endpoint can be used for logging purposes
+ *
+ * @route POST /auth/logout
+ * @access Private (requires authentication)
+ */
+exports.logout = catchAsync(async (req, res) => {
+  const { username } = req.user;
+
+  // Log logout event
+  console.log(`User logged out: ${username}`);
+
+  res.json({
+    success: true,
+    message: "Logout successful. Please remove token from client storage.",
+  });
+});
