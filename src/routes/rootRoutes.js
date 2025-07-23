@@ -8,23 +8,23 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.status(200).json({
     message: "Welcome to Riddles Server!",
-    version: "2.5.0",
+    version: "3.0.0",
     features: {
       databases: "MongoDB for Riddles and Supabase (postgres) for Players",
       riddles: [
-        "GET /riddles - Get all riddles",
-        "GET /riddles/random - Get random riddle",
-        "GET /riddles/:id - Get riddle by ID",
-        "POST /riddles - Create new riddle",
-        "PUT /riddles/:id - Update riddle",
-        "DELETE /riddles/:id - Delete riddle",
-        "POST /riddles/load-initial - Load initial riddles",
+        "GET /riddles - Get all riddles (requires user/admin auth)",
+        "GET /riddles/random - Get random riddle (public)",
+        "GET /riddles/:id - Get riddle by ID (requires user/admin auth)",
+        "POST /riddles - Create new riddle (requires user/admin auth)",
+        "PUT /riddles/:id - Update riddle (requires admin auth)",
+        "DELETE /riddles/:id - Delete riddle (requires admin auth)",
+        "POST /riddles/load-initial - Load initial riddles (requires admin auth)",
       ],
       players: [
-        "GET /players/leaderboard - Get leaderboard",
-        "POST /players - Create player",
-        "GET /players/:username - Get player stats",
-        "POST /players/submit-score - Submit score",
+        "GET /players/leaderboard - Get leaderboard (public)",
+        "POST /players - Create player (public)",
+        "GET /players/:username - Get player stats (optional auth)",
+        "POST /players/submit-score - Submit score (public)",
       ],
       auth: [
         "POST /auth/register - Register new user",
