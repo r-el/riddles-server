@@ -20,11 +20,13 @@
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.52.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.17.0"
   }
 }
