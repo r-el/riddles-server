@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.status(200).json({
     message: "Welcome to Riddles Server!",
-    version: "2.0.0",
+    version: "2.5.0",
     features: {
       databases: "MongoDB for Riddles and Supabase (postgres) for Players",
       riddles: [
@@ -25,6 +25,14 @@ router.get("/", (req, res) => {
         "POST /players - Create player",
         "GET /players/:username - Get player stats",
         "POST /players/submit-score - Submit score",
+      ],
+      auth: [
+        "POST /auth/register - Register new user",
+        "POST /auth/login - Login user",
+        "GET /auth/profile - Get user profile (requires auth)",
+        "POST /auth/validate - Validate token (requires auth)",
+        "POST /auth/logout - Logout (requires auth)",
+        "GET /auth/stats - Get auth stats (admin only)",
       ],
       system: ["GET /health - Health check"],
     },

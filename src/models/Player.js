@@ -14,6 +14,7 @@ const { ApiError } = require("../middleware/errorHandler");
  * @param {string} data.username - Player's username
  * @param {Date} data.created_at - Timestamp when the player was created
  * @param {number} [data.best_time=0] - Player's best time in milliseconds
+ * @param {string} [data.role='user'] - Player's role (guest, user, admin)
  */
 class Player {
   constructor(data) {
@@ -21,6 +22,7 @@ class Player {
     this.username = data.username;
     this.created_at = data.created_at;
     this.best_time = data.best_time || 0;
+    this.role = data.role || "user";
   }
 
   // Static Methods for Database Operations
