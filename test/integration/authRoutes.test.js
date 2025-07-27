@@ -120,4 +120,34 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.error).toContain("Database connection failed");
     });
   });
+
+  describe("POST /auth/login", () => {
+    it("should login user successfully", async () => {
+      // Arrange
+      const mockResult = {
+        user: {
+          id: 1,
+          username: "testuser",
+          role: "user",
+          created_at: "2025-07-23T13:00:00.000Z",
+        },
+        token: "mock.jwt.token",
+      };
+      authService.loginUser.mockResolvedValue(mockResult);
+
+      // Act
+      const response = await request(app).post("/auth/login").send({
+        username: "testuser",
+        password: "password123",
+      });
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("Login successful");
+      expect(response.body.data).toEqual(mockResult);
+      expect(authService.loginUser).toHaveBeenCalledWith("testuser", "password123");
+    });
+
+  });
 });
