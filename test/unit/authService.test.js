@@ -182,5 +182,11 @@ describe("Authentication Service", () => {
       // Act & Assert
       expect(() => authService.verifyToken("token")).toThrow("JWT_SECRET not configured");
     });
+
+    it("should throw ApiError for invalid token format", () => {
+      // Act & Assert
+      expect(() => authService.verifyToken("")).toThrow(ApiError);
+      expect(() => authService.verifyToken(123)).toThrow(ApiError);
+    });
   });
 });
