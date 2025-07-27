@@ -123,5 +123,13 @@ describe("Authentication Service", () => {
       // Act & Assert
       expect(() => authService.generateToken(user)).toThrow("JWT_SECRET not configured");
     });
+
+    it("should throw error for invalid user object", () => {
+      // Act & Assert
+      expect(() => authService.generateToken({})).toThrow("User object must contain id, username, and role");
+      expect(() => authService.generateToken({ id: 1 })).toThrow(
+        "User object must contain id, username, and role"
+      );
+    });
   });
 });
