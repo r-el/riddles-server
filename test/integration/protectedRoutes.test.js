@@ -136,5 +136,31 @@ describe("Protected Routes Integration", () => {
         expect(response.body.success).toBe(false);
       });
     });
+
+    describe("DELETE /riddles/:id", () => {
+      it("should allow admin to delete riddle", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        Riddle.deleteById.mockResolvedValue({ deletedId: "1" });
+
+        // Act
+        const response = await request(app)
+          .delete("/riddles/1")
+          .set("Authorization", "Bearer valid.admin.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
+    });
   });
 });
