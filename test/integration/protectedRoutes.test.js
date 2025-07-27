@@ -256,5 +256,41 @@ describe("Protected Routes Integration", () => {
         expect(response.body.error).toBe("Authentication token is required");
       });
     });
+
+    describe("GET /players/leaderboard", () => {
+      it("should allow user to access leaderboard", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        const mockLeaderboard = [{ username: "player1", score: 100 }];
+        Player.getLeaderboard.mockResolvedValue(mockLeaderboard);
+
+        // Act
+        const response = await request(app).get("/players/leaderboard").set("Authorization", "Bearer valid.user.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app).get("/players/leaderboard");
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
+    });
+
   });
 });
