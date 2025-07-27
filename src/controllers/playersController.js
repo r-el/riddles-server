@@ -41,8 +41,8 @@ exports.getPlayerByUsername = catchAsync(async (req, res) => {
   const { username } = req.params;
   const user = req.user; // Optional - may be undefined if no token provided
   
-  // Without authentication: return nothing (no access)
-  if (!user) {
+  // Without authentication or guest user: return 401
+  if (!user || user.role === 'guest') {
     return res.status(401).json({
       success: false,
       message: "Authentication required to view player information"
