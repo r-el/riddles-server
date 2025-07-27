@@ -165,5 +165,22 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe("Invalid username or password");
     });
+
+    it("should return 400 for missing credentials", async () => {
+      // Arrange
+      const { ApiError } = require("../../src/middleware/errorHandler");
+      authService.loginUser.mockRejectedValue(new ApiError(400, "Username and password are required"));
+
+      // Act
+      const response = await request(app).post("/auth/login").send({
+        username: "testuser",
+        // Missing password
+      });
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe("Username and password are required");
+    });
   });
 });
