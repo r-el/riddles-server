@@ -14,12 +14,70 @@ This project is a backend server that manages a collection of riddles and tracks
 ### Technical Features
 
 - RESTful API with Express.js
+- JWT-based authentication system
+- Role-based access control (user/admin)
+- Password hashing with bcrypt
 - Cloud database integration (MongoDB + Supabase)
 - Centralized error handling
 - Request logging and monitoring
 - Health check endpoints
 - Graceful shutdown handling
 - Connection pooling
+- Comprehensive testing suite
+- Silent testing environment
+
+### Business Features
+
+- User registration and authentication
+- Riddle management (CRUD operations)
+- Player profiles and statistics
+- Score tracking and leaderboards
+- Admin-only operations
+- Protected API endpoints
+## Quick Start
+
+## Project Structure
+
+```
+riddles-server/
+├── src/
+│   ├── controllers/          # Request handlers
+│   │   ├── authController.js     # Authentication logic
+│   │   ├── playersController.js  # Player operations
+│   │   └── riddlesController.js  # Riddle management
+│   ├── middleware/           # Express middleware
+│   │   ├── authMiddleware.js     # JWT & role validation
+│   │   ├── errorHandler.js      # Global error handling
+│   │   └── requestLogger.js     # Request logging
+│   ├── models/              # Data models
+│   │   ├── Player.js            # Player data model
+│   │   └── Riddle.js            # Riddle data model
+│   ├── routes/              # API route definitions
+│   │   ├── authRoutes.js        # Auth endpoints
+│   │   ├── playersRoutes.js     # Player endpoints
+│   │   ├── riddlesRoutes.js     # Riddle endpoints
+│   │   └── rootRoutes.js        # Root & health endpoints
+│   ├── services/            # Business logic
+│   │   └── authService.js       # Auth operations
+│   ├── db/                  # Database connections
+│   │   ├── mongodb.js           # MongoDB setup
+│   │   └── supabase.js          # Supabase setup
+│   └── server.js            # Main server file
+├── test/                    # Test suite
+│   ├── setup.js                 # Global test config
+│   ├── unit/                    # Unit tests
+│   │   └── authService.test.js
+│   └── integration/             # Integration tests
+│       ├── authRoutes.test.js
+│       └── protectedRoutes.test.js
+├── database/                # Database scripts
+│   └── auth_migration.sql       # SQL migrations
+├── docs/                    # Documentation
+│   └── api.md                   # API documentation
+├── .env.example             # Environment template
+├── package.json             # Dependencies
+└── README.md               # This file
+```
 
 ## Quick Start
 
@@ -56,8 +114,14 @@ MONGODB_DB_NAME=riddles_game
 SUPABASE_URL=your-supabase-project-url
 SUPABASE_KEY=your-supabase-anon-key
 
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_EXPIRES_IN=7d
+ADMIN_SECRET_CODE=your-admin-registration-code
+
 # Server Configuration
 PORT=3000
+NODE_ENV=development
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
 
@@ -283,35 +347,6 @@ Response:
 }
 ```
 
-## Project Structure
-
-```
-riddles-server/
-├── index.js                     # Main entry point
-├── src/
-│   ├── server.js                # Express app configuration
-│   ├── controllers/             # Request handlers
-│   │   ├── riddlesController.js # Riddles CRUD operations (API)
-│   │   └── playersController.js # Players and scoring (API)
-│   ├── models/                  # Data models
-│   │   ├── Riddle.js           # MongoDB riddle model
-│   │   └── Player.js           # Supabase player model
-│   ├── db/                     # Database connections
-│   │   ├── mongodb.js          # MongoDB Atlas connection
-│   │   └── supabase.js         # Supabase connection
-│   ├── routes/                 # Route definitions
-│   │   ├── riddlesRoutes.js    # Riddles API routes
-│   │   ├── playersRoutes.js    # Players API routes
-│   │   └── rootRoutes.js       # Root and info routes
-│   ├── middleware/             # Custom middleware
-│   │   ├── errorHandler.js     # Centralized error handling
-│   │   └── requestLogger.js    # Request logging
-│   └── config/                 # Configuration files
-│       └── database.js         # Database configuration
-├── .env.example                # Environment variables template
-├── package.json               # Project dependencies
-└── README.md                  # This file
-```
 
 ## Technology Stack
 
