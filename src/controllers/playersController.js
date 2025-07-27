@@ -82,3 +82,15 @@ exports.getLeaderboard = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * Get all players (admin only)
+ */
+exports.getAllPlayers = catchAsync(async (req, res) => {
+  const players = await Player.findAll();
+
+  res.json({
+    success: true,
+    data: players,
+  });
+});
+
