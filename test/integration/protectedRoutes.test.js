@@ -66,6 +66,16 @@ describe("Protected Routes Integration", () => {
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
       });
+
+      it("should deny access without token", async () => {
+        // Act
+        const response = await request(app).get("/riddles");
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
     });
   });
 });
