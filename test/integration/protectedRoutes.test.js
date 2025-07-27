@@ -356,5 +356,60 @@ describe("Protected Routes Integration", () => {
         expect(response.body.error).toBe("Authentication token is required");
       });
     });
+
+    describe("GET /players/:username", () => {
+      it("should allow access with authentication (own profile)", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        const mockPlayerStats = { 
+          username: "testuser", 
+          created_at: "2024-01-01",
+          riddles_solved: 5,
+          best_time: 30,
+          total_time: 200,
+          average_time: 40,
+          detailed_history: []
+        };
+        Player.getPlayerStats.mockResolvedValue(mockPlayerStats);
+
+        // Act
+        const response = await request(app).get("/players/testuser").set("Authorization", "Bearer valid.user.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should allow access without authentication (limited data)", async () => {
+        // Arrange
+        const mockPlayerStats = { 
+          username: "testuser", 
+          created_at: "2024-01-01",
+          riddles_solved: 5
+        };
+        Player.getPlayerStats.mockResolvedValue(mockPlayerStats);
+
+        // Act
+        const response = await request(app).get("/players/testuser");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.data).toEqual({
+          username: "testuser",
+          created_at: "2024-01-01",
+          riddles_solved: 5
+        });
+      });
+    });
   });
 });
