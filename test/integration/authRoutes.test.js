@@ -224,5 +224,15 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.message).toBe("Profile retrieved successfully");
       expect(response.body.data.username).toBe("testuser");
     });
+
+    it("should return 401 without token", async () => {
+      // Act
+      const response = await request(app).get("/auth/profile");
+
+      // Assert
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe("Authentication token is required");
+    });
   });
 });
