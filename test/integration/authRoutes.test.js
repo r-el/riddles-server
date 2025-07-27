@@ -234,5 +234,21 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe("Authentication token is required");
     });
+
+    it("should return 401 with invalid token", async () => {
+      // Arrange
+      const { ApiError } = require("../../src/middleware/errorHandler");
+      authService.verifyToken.mockImplementation(() => {
+        throw new ApiError(401, "Invalid token");
+      });
+
+      // Act
+      const response = await request(app).get("/auth/profile").set("Authorization", "Bearer invalid.token");
+
+      // Assert
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe("Invalid token");
+    });
   });
 });
