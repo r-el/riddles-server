@@ -103,5 +103,21 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe("Username must be at least 3 characters long");
     });
+
+    it("should return 500 for internal server errors", async () => {
+      // Arrange
+      authService.registerUser.mockRejectedValue(new Error("Database connection failed"));
+
+      // Act
+      const response = await request(app).post("/auth/register").send({
+        username: "testuser",
+        password: "password123",
+      });
+
+      // Assert
+      expect(response.status).toBe(500);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toContain("Database connection failed");
+    });
   });
 });
