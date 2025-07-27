@@ -189,4 +189,13 @@ describe("Authentication Service", () => {
       expect(() => authService.verifyToken(123)).toThrow(ApiError);
     });
   });
+
+  describe("isValidRole", () => {
+    it("should return true for valid roles", () => {
+      // Act & Assert
+      expect(authService.isValidRole("guest")).toBe(true);
+      expect(authService.isValidRole("user")).toBe(true);
+      expect(authService.isValidRole("admin")).toBe(true);
+    });
+  });
 });
