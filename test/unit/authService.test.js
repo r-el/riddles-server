@@ -76,5 +76,17 @@ describe("Authentication Service", () => {
       expect(bcrypt.compare).toHaveBeenCalledWith(password, hash);
       expect(result).toBe(true);
     });
+
+    it("should return false for non-matching passwords", async () => {
+      // Arrange
+      bcrypt.compare.mockResolvedValue(false);
+
+      // Act
+      const result = await authService.comparePassword("wrong", "hash");
+
+      // Assert
+      expect(result).toBe(false);
+    });
   });
+
 });
