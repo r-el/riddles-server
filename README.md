@@ -98,26 +98,37 @@ npm run dev
 
 ## API Documentation
 
+### Authentication Endpoints
+
+| Method | Endpoint          | Description                  | Auth Required |
+| ------ | ----------------- | ---------------------------- | ------------- |
+| POST   | `/auth/register`  | Register new user            | No            |
+| POST   | `/auth/login`     | Login user                   | No            |
+| POST   | `/auth/logout`    | Logout user                  | Yes           |
+| GET    | `/auth/profile`   | Get current user profile     | Yes           |
+| PUT    | `/auth/profile`   | Update user profile          | Yes           |
+
 ### Riddles Endpoints
 
-| Method | Endpoint                | Description                       |
-| ------ | ----------------------- | --------------------------------- |
-| GET    | `/riddles`              | Get all riddles (with pagination) |
-| GET    | `/riddles/random`       | Get a random riddle               |
-| GET    | `/riddles/:id`          | Get specific riddle by ID         |
-| POST   | `/riddles`              | Create a new riddle               |
-| PUT    | `/riddles/:id`          | Update existing riddle            |
-| DELETE | `/riddles/:id`          | Delete riddle                     |
-| POST   | `/riddles/load-initial` | Bulk load initial riddles         |
+| Method | Endpoint                | Description                       | Auth Required |
+| ------ | ----------------------- | --------------------------------- | ------------- |
+| GET    | `/riddles`              | Get all riddles (with pagination) | Yes (User)    |
+| GET    | `/riddles/random`       | Get a random riddle               | No            |
+| GET    | `/riddles/:id`          | Get specific riddle by ID         | Yes (User)    |
+| POST   | `/riddles`              | Create a new riddle               | Yes (User)    |
+| PUT    | `/riddles/:id`          | Update existing riddle            | Yes (User)    |
+| DELETE | `/riddles/:id`          | Delete riddle                     | Yes (Admin)   |
+| POST   | `/riddles/load-initial` | Bulk load initial riddles         | Yes (Admin)   |
 
 ### Players Endpoints
 
-| Method | Endpoint                | Description                      |
-| ------ | ----------------------- | -------------------------------- |
-| POST   | `/players`              | Create new player                |
-| GET    | `/players/:username`    | Get player stats and history     |
-| POST   | `/players/submit-score` | Submit solving time for a riddle |
-| GET    | `/players/leaderboard`  | Get top players leaderboard      |
+| Method | Endpoint                | Description                      | Auth Required |
+| ------ | ----------------------- | -------------------------------- | ------------- |
+| GET    | `/players`              | Get all players (admin only)     | Yes (Admin)   |
+| POST   | `/players`              | Create new player                | Yes (User)    |
+| GET    | `/players/:username`    | Get player stats and history     | Yes (User)    |
+| POST   | `/players/submit-score` | Submit solving time for a riddle | Yes (User)    |
+| GET    | `/players/leaderboard`  | Get top players leaderboard      | Yes (User)    |
 
 ### System Endpoints
 
@@ -128,10 +139,72 @@ npm run dev
 
 ## API Examples
 
+### Authentication
+
+#### Register User
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "securePassword123"
+  }'
+```
+
+#### Register Admin User
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin_user",
+    "password": "securePassword123",
+    "adminCode": "your-admin-secret-code"
+  }'
+```
+
+#### Login
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "securePassword123"
+  }'
+```
+
+Response:
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "user": {
+      "id": 1,
+      "username": "john_doe",
+      "role": "user"
+    }
+  }
+}
+```
+
+#### Using Authentication Token
+
+For protected routes, include the JWT token in the Authorization header:
+
+```bash
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  http://localhost:3000/riddles
+```
+
 ### Get All Riddles
 
 ```bash
-curl http://localhost:3000/riddles
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  http://localhost:3000/riddles
 ```
 
 Response:
@@ -157,6 +230,7 @@ Response:
 ```bash
 curl -X POST http://localhost:3000/riddles \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
     "question": "What has keys but cannot open locks?",
     "answer": "Piano",
@@ -169,6 +243,7 @@ curl -X POST http://localhost:3000/riddles \
 ```bash
 curl -X POST http://localhost:3000/players \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{"username": "player1"}'
 ```
 
@@ -177,6 +252,7 @@ curl -X POST http://localhost:3000/players \
 ```bash
 curl -X POST http://localhost:3000/players/submit-score \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
     "username": "player1",
     "riddleId": "507f1f77bcf86cd799439011",
@@ -187,7 +263,8 @@ curl -X POST http://localhost:3000/players/submit-score \
 ### Get Leaderboard
 
 ```bash
-curl http://localhost:3000/players/leaderboard?limit=10
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  http://localhost:3000/players/leaderboard?limit=10
 ```
 
 Response:
@@ -264,6 +341,76 @@ riddles-server/
 - ✔ Supabase integration for players
 - ✔ Data model refactoring
 - ✔ Connection pooling
+
+### Phase 5: Testing Infrastructure (Completed)
+
+- ✔ JWT-based authentication
+- ✔ User registration and login
+- ✔ Password hashing with bcrypt
+- ✔ Role-based access control (user/admin)
+- ✔ Admin-only routes protection
+- ✔ Secure environment variables
+- ✔ Unit tests for authentication service
+- ✔ Integration tests for auth routes
+- ✔ Integration tests for protected routes
+- ✔ Silent testing (no console output during tests)
+
+## Testing
+
+### Test Structure
+
+The project includes comprehensive testing with Jest:
+
+```
+test/
+├── setup.js                      # Global test configuration
+├── unit/
+│   └── authService.test.js       # Authentication service unit tests
+└── integration/
+    ├── authRoutes.test.js        # Authentication endpoints tests
+    └── protectedRoutes.test.js   # Route protection tests
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test file
+npm test -- test/unit/authService.test.js
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+### Test Features
+
+- **Unit Testing**: Core authentication logic
+- **Integration Testing**: Full API endpoint testing
+- **Mocked Dependencies**: Database and external services mocked
+- **Silent Testing**: No console output during test runs
+- **Role-based Testing**: Tests for user and admin access levels
+
+### Authentication Testing
+
+Tests cover:
+- Password hashing and verification
+- JWT token generation and validation
+- User registration (regular and admin)
+- Login/logout functionality
+- Protected route access control
+- Role-based permissions
+
+Example test output:
+```
+✓ Authentication Service (17 tests)
+✓ Auth Routes Integration (6 tests)
+✓ Protected Routes Integration (12 tests)
+```
 
 ## Error Handling
 
