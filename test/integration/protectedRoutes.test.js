@@ -390,26 +390,14 @@ describe("Protected Routes Integration", () => {
         expect(response.body.success).toBe(true);
       });
 
-      it("should allow access without authentication (limited data)", async () => {
-        // Arrange
-        const mockPlayerStats = { 
-          username: "testuser", 
-          created_at: "2024-01-01",
-          riddles_solved: 5
-        };
-        Player.getPlayerStats.mockResolvedValue(mockPlayerStats);
-
+      it("should deny access without authentication", async () => {
         // Act
         const response = await request(app).get("/players/testuser");
 
         // Assert
-        expect(response.status).toBe(200);
-        expect(response.body.success).toBe(true);
-        expect(response.body.data).toEqual({
-          username: "testuser",
-          created_at: "2024-01-01",
-          riddles_solved: 5
-        });
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.message).toBe("Authentication required to view player information");
       });
     });
 
