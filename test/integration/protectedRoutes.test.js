@@ -292,5 +292,69 @@ describe("Protected Routes Integration", () => {
       });
     });
 
+    describe("POST /players", () => {
+      it("should allow admin to create player", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        const mockPlayer = { id: "123", username: "newplayer", email: "new@example.com" };
+        Player.create.mockResolvedValue(mockPlayer);
+
+        // Act
+        const response = await request(app)
+          .post("/players")
+          .set("Authorization", "Bearer valid.admin.token")
+          .send({ username: "newplayer", email: "new@example.com", password: "password123" });
+
+        // Assert
+        expect(response.status).toBe(201);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should deny user access to create player", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+
+        // Act
+        const response = await request(app)
+          .post("/players")
+          .set("Authorization", "Bearer valid.user.token")
+          .send({ username: "newplayer", email: "new@example.com", password: "password123" });
+
+        // Assert
+        expect(response.status).toBe(403);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toContain("Access denied");
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app)
+          .post("/players")
+          .send({ username: "newplayer", email: "new@example.com", password: "password123" });
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
+    });
   });
 });
