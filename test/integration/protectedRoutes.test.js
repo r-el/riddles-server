@@ -77,5 +77,21 @@ describe("Protected Routes Integration", () => {
         expect(response.body.error).toBe("Authentication token is required");
       });
     });
+
+    describe("GET /riddles/random", () => {
+      it("should allow public access", async () => {
+        // Arrange
+        const mockRandomRiddle = { _id: "1", question: "Random question", answer: "Random answer" };
+        Riddle.findRandom.mockResolvedValue(mockRandomRiddle);
+
+        // Act
+        const response = await request(app).get("/riddles/random");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.data).toEqual(mockRandomRiddle);
+      });
+    });
   });
 });
