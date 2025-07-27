@@ -4,6 +4,7 @@
  */
 const request = require("supertest");
 const app = require("../../src/server");
+const { ApiError } = require("../../src/middleware/errorHandler");
 
 // Mock dependencies to avoid real database calls during testing
 jest.mock("../../src/services/authService");
@@ -68,9 +69,9 @@ describe("Authentication Routes Integration", () => {
       expect(authService.registerUser).toHaveBeenCalledWith("adminuser", "password123", "secret-admin-code");
     });
 
-    it("should handle registration errors", async () => {
+    it("should return 409 when username already exists", async () => {
       // Arrange
-      authService.registerUser.mockRejectedValue(new Error("Username already exists"));
+      authService.registerUser.mockRejectedValue(new ApiError(409, "Username already exists"));
 
       // Act
       const response = await request(app).post("/auth/register").send({
@@ -79,9 +80,28 @@ describe("Authentication Routes Integration", () => {
       });
 
       // Assert
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(409);
       expect(response.body.success).toBe(false);
-      expect(response.body.error).toContain("Username already exists");
+      expect(response.body.error).toBe("Username already exists");
+    });
+
+    it("should return 400 for invalid input", async () => {
+      // Arrange
+      const { ApiError } = require("../../src/middleware/errorHandler");
+      authService.registerUser.mockRejectedValue(
+        new ApiError(400, "Username must be at least 3 characters long")
+      );
+
+      // Act
+      const response = await request(app).post("/auth/register").send({
+        username: "ab",
+        password: "password123",
+      });
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe("Username must be at least 3 characters long");
     });
   });
 });
