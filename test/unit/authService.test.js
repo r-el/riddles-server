@@ -197,5 +197,11 @@ describe("Authentication Service", () => {
       expect(authService.isValidRole("user")).toBe(true);
       expect(authService.isValidRole("admin")).toBe(true);
     });
+
+    it("should return false for invalid roles", () => {
+      // Act & Assert
+      expect(authService.isValidRole("invalid")).toBe(false);
+      expect(authService.isValidRole("")).toBe(false);
+    });
   });
 });
