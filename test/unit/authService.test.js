@@ -174,5 +174,13 @@ describe("Authentication Service", () => {
       expect(() => authService.verifyToken("invalid.token")).toThrow(ApiError);
       expect(() => authService.verifyToken("invalid.token")).toThrow("Invalid token");
     });
+
+    it("should throw error for missing JWT_SECRET", () => {
+      // Arrange
+      delete process.env.JWT_SECRET;
+
+      // Act & Assert
+      expect(() => authService.verifyToken("token")).toThrow("JWT_SECRET not configured");
+    });
   });
 });
