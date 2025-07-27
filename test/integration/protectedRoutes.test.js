@@ -126,6 +126,15 @@ describe("Protected Routes Integration", () => {
         expect(response.status).toBe(201);
         expect(response.body.success).toBe(true);
       });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app).post("/riddles").send(newRiddle);
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+      });
     });
   });
 });
