@@ -3,6 +3,7 @@
  * Tests the core authentication functionality without database dependencies
  */
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const authService = require("../../src/services/authService");
 
 // Mock dependencies
@@ -94,6 +95,24 @@ describe("Authentication Service", () => {
       await expect(authService.comparePassword("password", "")).rejects.toThrow(
         "Password and hash are required"
       );
+    });
+  });
+
+  describe("generateToken", () => {
+    it("should generate token successfully", () => {
+      // Arrange
+      const user = { id: 1, username: "testuser", role: "user" };
+      const mockToken = "mock.jwt.token";
+      jwt.sign.mockReturnValue(mockToken);
+
+      // Act
+      const result = authService.generateToken(user);
+
+      // Assert
+      expect(jwt.sign).toHaveBeenCalledWith({ id: 1, username: "testuser", role: "user" }, "test-secret", {
+        expiresIn: "1h",
+      });
+      expect(result).toBe(mockToken);
     });
   });
 });
