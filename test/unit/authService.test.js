@@ -15,3 +15,13 @@ jest.mock("../../src/db/supabase", () => ({
     insert: jest.fn().mockReturnThis(),
   },
 }));
+
+describe("Authentication Service", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Set required environment variables for tests
+    process.env.JWT_SECRET = "test-secret";
+    process.env.JWT_EXPIRES_IN = "1h";
+    process.env.ADMIN_SECRET_CODE = "admin123";
+  });
+});
