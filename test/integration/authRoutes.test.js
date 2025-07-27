@@ -320,4 +320,28 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.message).toBe("Logout successful. Please remove token from client storage.");
     });
   });
+
+  describe("GET /auth/stats", () => {
+    it("should return stats for admin user", async () => {
+      // Arrange
+      authService.verifyToken.mockReturnValue({
+        id: 1,
+        username: "admin",
+        role: "admin",
+      });
+      authService.getUserById.mockResolvedValue({
+        id: 1,
+        username: "admin",
+        role: "admin",
+      });
+
+      // Act
+      const response = await request(app).get("/auth/stats").set("Authorization", "Bearer admin.token");
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("Authentication statistics");
+    });
+  });
 });
