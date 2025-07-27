@@ -14,13 +14,26 @@ This project is a backend server that manages a collection of riddles and tracks
 ### Technical Features
 
 - RESTful API with Express.js
+- JWT-based authentication system
+- Role-based access control (user/admin)
+- Password hashing with bcrypt
 - Cloud database integration (MongoDB + Supabase)
 - Centralized error handling
 - Request logging and monitoring
 - Health check endpoints
 - Graceful shutdown handling
 - Connection pooling
+- Comprehensive testing suite
+- Silent testing environment
 
+### Business Features
+
+- User registration and authentication
+- Riddle management (CRUD operations)
+- Player profiles and statistics
+- Score tracking and leaderboards
+- Admin-only operations
+- Protected API endpoints
 ## Quick Start
 
 ### Prerequisites
