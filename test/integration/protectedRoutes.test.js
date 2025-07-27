@@ -306,6 +306,7 @@ describe("Protected Routes Integration", () => {
           role: "admin",
         });
         const mockPlayer = { id: "123", username: "newplayer", email: "new@example.com" };
+        Player.findByUsername.mockResolvedValue(null); // Player doesn't exist yet
         Player.create.mockResolvedValue(mockPlayer);
 
         // Act
