@@ -199,4 +199,30 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.error).toContain("Database connection failed");
     });
   });
+
+  describe("GET /auth/profile", () => {
+    it("should return user profile with valid token", async () => {
+      // Arrange
+      authService.verifyToken.mockReturnValue({
+        id: 1,
+        username: "testuser",
+        role: "user",
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      authService.getUserById.mockResolvedValue({
+        id: 1,
+        username: "testuser",
+        role: "user",
+      });
+
+      // Act
+      const response = await request(app).get("/auth/profile").set("Authorization", "Bearer valid.token");
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("Profile retrieved successfully");
+      expect(response.body.data.username).toBe("testuser");
+    });
+  });
 });
