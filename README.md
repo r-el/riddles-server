@@ -34,7 +34,6 @@ This project is a backend server that manages a collection of riddles and tracks
 - Score tracking and leaderboards
 - Admin-only operations
 - Protected API endpoints
-## Quick Start
 
 ## Project Structure
 
