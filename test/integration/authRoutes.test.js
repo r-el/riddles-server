@@ -296,4 +296,28 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.data.valid).toBe(true);
     });
   });
+
+  describe("POST /auth/logout", () => {
+    it("should logout successfully", async () => {
+      // Arrange
+      authService.verifyToken.mockReturnValue({
+        id: 1,
+        username: "testuser",
+        role: "user",
+      });
+      authService.getUserById.mockResolvedValue({
+        id: 1,
+        username: "testuser",
+        role: "user",
+      });
+
+      // Act
+      const response = await request(app).post("/auth/logout").set("Authorization", "Bearer valid.token");
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("Logout successful. Please remove token from client storage.");
+    });
+  });
 });
