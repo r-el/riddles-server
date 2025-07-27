@@ -343,5 +343,27 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.success).toBe(true);
       expect(response.body.message).toBe("Authentication statistics");
     });
+
+    it("should deny access for non-admin user", async () => {
+      // Arrange
+      authService.verifyToken.mockReturnValue({
+        id: 2,
+        username: "user",
+        role: "user",
+      });
+      authService.getUserById.mockResolvedValue({
+        id: 2,
+        username: "user",
+        role: "user",
+      });
+
+      // Act
+      const response = await request(app).get("/auth/stats").set("Authorization", "Bearer user.token");
+
+      // Assert
+      expect(response.status).toBe(403);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toContain("Access denied");
+    });
   });
 });
