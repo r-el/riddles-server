@@ -355,6 +355,62 @@ riddles-server/
 - ✔ Integration tests for protected routes
 - ✔ Silent testing (no console output during tests)
 
+## Testing
+
+### Test Structure
+
+The project includes comprehensive testing with Jest:
+
+```
+test/
+├── setup.js                      # Global test configuration
+├── unit/
+│   └── authService.test.js       # Authentication service unit tests
+└── integration/
+    ├── authRoutes.test.js        # Authentication endpoints tests
+    └── protectedRoutes.test.js   # Route protection tests
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test file
+npm test -- test/unit/authService.test.js
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+### Test Features
+
+- **Unit Testing**: Core authentication logic
+- **Integration Testing**: Full API endpoint testing
+- **Mocked Dependencies**: Database and external services mocked
+- **Silent Testing**: No console output during test runs
+- **Role-based Testing**: Tests for user and admin access levels
+
+### Authentication Testing
+
+Tests cover:
+- Password hashing and verification
+- JWT token generation and validation
+- User registration (regular and admin)
+- Login/logout functionality
+- Protected route access control
+- Role-based permissions
+
+Example test output:
+```
+✓ Authentication Service (17 tests)
+✓ Auth Routes Integration (6 tests)
+✓ Protected Routes Integration (12 tests)
+```
 
 ## Error Handling
 
