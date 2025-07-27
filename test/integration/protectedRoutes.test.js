@@ -93,5 +93,39 @@ describe("Protected Routes Integration", () => {
         expect(response.body.data).toEqual(mockRandomRiddle);
       });
     });
+
+    describe("POST /riddles", () => {
+      const newRiddle = {
+        question: "New question",
+        answer: "New answer",
+        level: "medium",
+      };
+
+      it("should allow user to create riddle", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        const mockCreatedRiddle = { _id: "2", ...newRiddle };
+        Riddle.create.mockResolvedValue(mockCreatedRiddle);
+
+        // Act
+        const response = await request(app)
+          .post("/riddles")
+          .set("Authorization", "Bearer valid.user.token")
+          .send(newRiddle);
+
+        // Assert
+        expect(response.status).toBe(201);
+        expect(response.body.success).toBe(true);
+      });
+    });
   });
 });
