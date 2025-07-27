@@ -122,12 +122,13 @@ npm run dev
 
 ### Players Endpoints
 
-| Method | Endpoint                | Description                      |
-| ------ | ----------------------- | -------------------------------- |
-| POST   | `/players`              | Create new player                |
-| GET    | `/players/:username`    | Get player stats and history     |
-| POST   | `/players/submit-score` | Submit solving time for a riddle |
-| GET    | `/players/leaderboard`  | Get top players leaderboard      |
+| Method | Endpoint                | Description                      | Auth Required |
+| ------ | ----------------------- | -------------------------------- | ------------- |
+| GET    | `/players`              | Get all players (admin only)     | Yes (Admin)   |
+| POST   | `/players`              | Create new player                | Yes (User)    |
+| GET    | `/players/:username`    | Get player stats and history     | Yes (User)    |
+| POST   | `/players/submit-score` | Submit solving time for a riddle | Yes (User)    |
+| GET    | `/players/leaderboard`  | Get top players leaderboard      | Yes (User)    |
 
 ### System Endpoints
 
