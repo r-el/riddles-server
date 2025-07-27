@@ -5,6 +5,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authService = require("../../src/services/authService");
+const { ApiError } = require("../../src/middleware/errorHandler");
 
 // Mock dependencies
 jest.mock("bcrypt");
@@ -146,6 +147,19 @@ describe("Authentication Service", () => {
       // Assert
       expect(jwt.verify).toHaveBeenCalledWith(token, "test-secret");
       expect(result).toEqual(decoded);
+    });
+
+    it("should throw ApiError for expired token", () => {
+      // Arrange
+      const error = new Error("Token expired");
+      error.name = "TokenExpiredError";
+      jwt.verify.mockImplementation(() => {
+        throw error;
+      });
+
+      // Act & Assert
+      expect(() => authService.verifyToken("expired.token")).toThrow(ApiError);
+      expect(() => authService.verifyToken("expired.token")).toThrow("Token has expired");
     });
   });
 });
