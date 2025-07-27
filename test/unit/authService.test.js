@@ -2,6 +2,8 @@
  * Authentication Service Unit Tests
  * Tests the core authentication functionality without database dependencies
  */
+const bcrypt = require("bcrypt");
+const authService = require("../../src/services/authService");
 
 // Mock dependencies
 jest.mock("bcrypt");
@@ -24,4 +26,21 @@ describe("Authentication Service", () => {
     process.env.JWT_EXPIRES_IN = "1h";
     process.env.ADMIN_SECRET_CODE = "admin123";
   });
+
+  describe("hashPassword", () => {
+    it("should hash password successfully", async () => {
+      // Arrange
+      const password = "testpassword123";
+      const hashedPassword = "$2b$10$hashedversion";
+      bcrypt.hash.mockResolvedValue(hashedPassword);
+
+      // Act
+      const result = await authService.hashPassword(password);
+
+      // Assert
+      expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
+      expect(result).toBe(hashedPassword);
+    });
+  });
+
 });
