@@ -132,4 +132,20 @@ describe("Authentication Service", () => {
       );
     });
   });
+
+  describe("verifyToken", () => {
+    it("should verify token successfully", () => {
+      // Arrange
+      const token = "valid.jwt.token";
+      const decoded = { id: 1, username: "testuser", role: "user" };
+      jwt.verify.mockReturnValue(decoded);
+
+      // Act
+      const result = authService.verifyToken(token);
+
+      // Assert
+      expect(jwt.verify).toHaveBeenCalledWith(token, "test-secret");
+      expect(result).toEqual(decoded);
+    });
+  });
 });
