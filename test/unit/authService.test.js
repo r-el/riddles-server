@@ -3,7 +3,9 @@
  * Tests the core authentication functionality without database dependencies
  */
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const authService = require("../../src/services/authService");
+const { ApiError } = require("../../src/middleware/errorHandler");
 
 // Mock dependencies
 jest.mock("bcrypt");
@@ -41,6 +43,9 @@ describe("Authentication Service", () => {
       expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
       expect(result).toBe(hashedPassword);
     });
-  });
 
+    it("should throw error for empty password", async () => {
+      await expect(authService.hashPassword("")).rejects.toThrow("Password must be a non-empty string");
+    });
+  });
 });
