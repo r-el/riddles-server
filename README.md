@@ -36,6 +36,51 @@ This project is a backend server that manages a collection of riddles and tracks
 - Protected API endpoints
 ## Quick Start
 
+## Project Structure
+
+```
+riddles-server/
+├── src/
+│   ├── controllers/          # Request handlers
+│   │   ├── authController.js     # Authentication logic
+│   │   ├── playersController.js  # Player operations
+│   │   └── riddlesController.js  # Riddle management
+│   ├── middleware/           # Express middleware
+│   │   ├── authMiddleware.js     # JWT & role validation
+│   │   ├── errorHandler.js      # Global error handling
+│   │   └── requestLogger.js     # Request logging
+│   ├── models/              # Data models
+│   │   ├── Player.js            # Player data model
+│   │   └── Riddle.js            # Riddle data model
+│   ├── routes/              # API route definitions
+│   │   ├── authRoutes.js        # Auth endpoints
+│   │   ├── playersRoutes.js     # Player endpoints
+│   │   ├── riddlesRoutes.js     # Riddle endpoints
+│   │   └── rootRoutes.js        # Root & health endpoints
+│   ├── services/            # Business logic
+│   │   └── authService.js       # Auth operations
+│   ├── db/                  # Database connections
+│   │   ├── mongodb.js           # MongoDB setup
+│   │   └── supabase.js          # Supabase setup
+│   └── server.js            # Main server file
+├── test/                    # Test suite
+│   ├── setup.js                 # Global test config
+│   ├── unit/                    # Unit tests
+│   │   └── authService.test.js
+│   └── integration/             # Integration tests
+│       ├── authRoutes.test.js
+│       └── protectedRoutes.test.js
+├── database/                # Database scripts
+│   └── auth_migration.sql       # SQL migrations
+├── docs/                    # Documentation
+│   └── api.md                   # API documentation
+├── .env.example             # Environment template
+├── package.json             # Dependencies
+└── README.md               # This file
+```
+
+## Quick Start
+
 ### Prerequisites
 
 - Node.js 18+
@@ -296,35 +341,6 @@ Response:
 }
 ```
 
-## Project Structure
-
-```
-riddles-server/
-├── index.js                     # Main entry point
-├── src/
-│   ├── server.js                # Express app configuration
-│   ├── controllers/             # Request handlers
-│   │   ├── riddlesController.js # Riddles CRUD operations (API)
-│   │   └── playersController.js # Players and scoring (API)
-│   ├── models/                  # Data models
-│   │   ├── Riddle.js           # MongoDB riddle model
-│   │   └── Player.js           # Supabase player model
-│   ├── db/                     # Database connections
-│   │   ├── mongodb.js          # MongoDB Atlas connection
-│   │   └── supabase.js         # Supabase connection
-│   ├── routes/                 # Route definitions
-│   │   ├── riddlesRoutes.js    # Riddles API routes
-│   │   ├── playersRoutes.js    # Players API routes
-│   │   └── rootRoutes.js       # Root and info routes
-│   ├── middleware/             # Custom middleware
-│   │   ├── errorHandler.js     # Centralized error handling
-│   │   └── requestLogger.js    # Request logging
-│   └── config/                 # Configuration files
-│       └── database.js         # Database configuration
-├── .env.example                # Environment variables template
-├── package.json               # Project dependencies
-└── README.md                  # This file
-```
 
 ## Technology Stack
 
