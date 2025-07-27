@@ -270,4 +270,30 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.error).toBe("User not found or has been deleted");
     });
   });
+
+  describe("POST /auth/validate", () => {
+    it("should validate token successfully", async () => {
+      // Arrange
+      authService.verifyToken.mockReturnValue({
+        id: 1,
+        username: "testuser",
+        role: "user",
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      authService.getUserById.mockResolvedValue({
+        id: 1,
+        username: "testuser",
+        role: "user",
+      });
+
+      // Act
+      const response = await request(app).post("/auth/validate").set("Authorization", "Bearer valid.token");
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBe("Token is valid");
+      expect(response.body.data.valid).toBe(true);
+    });
+  });
 });
