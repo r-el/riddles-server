@@ -149,5 +149,21 @@ describe("Authentication Routes Integration", () => {
       expect(authService.loginUser).toHaveBeenCalledWith("testuser", "password123");
     });
 
+    it("should return 401 for invalid credentials", async () => {
+      // Arrange
+      const { ApiError } = require("../../src/middleware/errorHandler");
+      authService.loginUser.mockRejectedValue(new ApiError(401, "Invalid username or password"));
+
+      // Act
+      const response = await request(app).post("/auth/login").send({
+        username: "wronguser",
+        password: "wrongpassword",
+      });
+
+      // Assert
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe("Invalid username or password");
+    });
   });
 });
