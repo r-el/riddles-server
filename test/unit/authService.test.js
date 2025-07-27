@@ -114,5 +114,14 @@ describe("Authentication Service", () => {
       });
       expect(result).toBe(mockToken);
     });
+
+    it("should throw error for missing JWT_SECRET", () => {
+      // Arrange
+      delete process.env.JWT_SECRET;
+      const user = { id: 1, username: "testuser", role: "user" };
+
+      // Act & Assert
+      expect(() => authService.generateToken(user)).toThrow("JWT_SECRET not configured");
+    });
   });
 });
