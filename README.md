@@ -139,10 +139,72 @@ npm run dev
 
 ## API Examples
 
+### Authentication
+
+#### Register User
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "securePassword123"
+  }'
+```
+
+#### Register Admin User
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin_user",
+    "password": "securePassword123",
+    "adminCode": "your-admin-secret-code"
+  }'
+```
+
+#### Login
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "securePassword123"
+  }'
+```
+
+Response:
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "user": {
+      "id": 1,
+      "username": "john_doe",
+      "role": "user"
+    }
+  }
+}
+```
+
+#### Using Authentication Token
+
+For protected routes, include the JWT token in the Authorization header:
+
+```bash
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  http://localhost:3000/riddles
+```
+
 ### Get All Riddles
 
 ```bash
-curl http://localhost:3000/riddles
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  http://localhost:3000/riddles
 ```
 
 Response:
@@ -168,6 +230,7 @@ Response:
 ```bash
 curl -X POST http://localhost:3000/riddles \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
     "question": "What has keys but cannot open locks?",
     "answer": "Piano",
