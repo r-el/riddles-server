@@ -114,8 +114,14 @@ MONGODB_DB_NAME=riddles_game
 SUPABASE_URL=your-supabase-project-url
 SUPABASE_KEY=your-supabase-anon-key
 
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key-here
+JWT_EXPIRES_IN=7d
+ADMIN_SECRET_CODE=your-admin-registration-code
+
 # Server Configuration
 PORT=3000
+NODE_ENV=development
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
 
