@@ -61,4 +61,20 @@ describe("Authentication Service", () => {
       );
     });
   });
+
+  describe("comparePassword", () => {
+    it("should return true for matching passwords", async () => {
+      // Arrange
+      const password = "testpassword";
+      const hash = "$2b$10$hashedversion";
+      bcrypt.compare.mockResolvedValue(true);
+
+      // Act
+      const result = await authService.comparePassword(password, hash);
+
+      // Assert
+      expect(bcrypt.compare).toHaveBeenCalledWith(password, hash);
+      expect(result).toBe(true);
+    });
+  });
 });
