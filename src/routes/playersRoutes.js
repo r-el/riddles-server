@@ -4,8 +4,11 @@
  */
 const express = require("express");
 const playersController = require("../controllers/playersController");
-const { optionalAuth } = require("../middleware/authMiddleware");
+const { optionalAuth, requireAdmin } = require("../middleware/authMiddleware");
 const router = express.Router();
+
+// Get all players - admin only
+router.get("/", requireAdmin, playersController.getAllPlayers);
 
 // Get leaderboard - public access
 router.get("/leaderboard", playersController.getLeaderboard);
