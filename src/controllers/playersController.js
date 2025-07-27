@@ -35,14 +35,43 @@ exports.createPlayer = catchAsync(async (req, res) => {
 
 /**
  * Get player by username
+ * Optional authentication provides enhanced data based on user role
  */
 exports.getPlayerByUsername = catchAsync(async (req, res) => {
   const { username } = req.params;
+  const user = req.user; // Optional - may be undefined if no token provided
+  
+  // Without authentication or guest user: return 401
+  if (!user || user.role === 'guest') {
+    return res.status(401).json({
+      success: false,
+      message: "Authentication required to view player information"
+    });
+  }
+  
   const playerStats = await Player.getPlayerStats(username);
+  
+  // Basic public information for regular users
+  let responseData = {
+    username: playerStats.username,
+    created_at: playerStats.created_at,
+    riddles_solved: playerStats.riddles_solved
+  };
+  
+  // Enhanced data for admins or when viewing own profile
+  if (user.role === 'admin' || user.username === username) {
+    responseData = {
+      ...responseData,
+      best_time: playerStats.best_time,
+      total_time: playerStats.total_time,
+      average_time: playerStats.average_time,
+      detailed_history: playerStats.detailed_history
+    };
+  }
 
   res.json({
     success: true,
-    data: playerStats,
+    data: responseData,
   });
 });
 

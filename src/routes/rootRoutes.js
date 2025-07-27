@@ -21,10 +21,11 @@ router.get("/", (req, res) => {
         "POST /riddles/load-initial - Load initial riddles (requires admin auth)",
       ],
       players: [
-        "GET /players/leaderboard - Get leaderboard (public)",
-        "POST /players - Create player (public)",
-        "GET /players/:username - Get player stats (optional auth)",
-        "POST /players/submit-score - Submit score (public)",
+        "GET /players - Get all players (admin only)",
+        "GET /players/leaderboard - Get leaderboard (requires user/admin auth)",
+        "POST /players - Create player (admin only)",
+        "GET /players/:username - Get player stats (requires auth, enhanced data for admin/own profile)",
+        "POST /players/submit-score - Submit score (requires user auth)",
       ],
       auth: [
         "POST /auth/register - Register new user",

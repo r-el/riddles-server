@@ -256,5 +256,190 @@ describe("Protected Routes Integration", () => {
         expect(response.body.error).toBe("Authentication token is required");
       });
     });
+
+    describe("GET /players/leaderboard", () => {
+      it("should allow user to access leaderboard", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        const mockLeaderboard = [{ username: "player1", score: 100 }];
+        Player.getLeaderboard.mockResolvedValue(mockLeaderboard);
+
+        // Act
+        const response = await request(app).get("/players/leaderboard").set("Authorization", "Bearer valid.user.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app).get("/players/leaderboard");
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
+    });
+
+    describe("POST /players", () => {
+      it("should allow admin to create player", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        const mockPlayer = { id: "123", username: "newplayer", email: "new@example.com" };
+        Player.findByUsername.mockResolvedValue(null); // Player doesn't exist yet
+        Player.create.mockResolvedValue(mockPlayer);
+
+        // Act
+        const response = await request(app)
+          .post("/players")
+          .set("Authorization", "Bearer valid.admin.token")
+          .send({ username: "newplayer", email: "new@example.com", password: "password123" });
+
+        // Assert
+        expect(response.status).toBe(201);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should deny user access to create player", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+
+        // Act
+        const response = await request(app)
+          .post("/players")
+          .set("Authorization", "Bearer valid.user.token")
+          .send({ username: "newplayer", email: "new@example.com", password: "password123" });
+
+        // Assert
+        expect(response.status).toBe(403);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toContain("Access denied");
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app)
+          .post("/players")
+          .send({ username: "newplayer", email: "new@example.com", password: "password123" });
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
+    });
+
+    describe("GET /players/:username", () => {
+      it("should allow access with authentication (own profile)", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        const mockPlayerStats = { 
+          username: "testuser", 
+          created_at: "2024-01-01",
+          riddles_solved: 5,
+          best_time: 30,
+          total_time: 200,
+          average_time: 40,
+          detailed_history: []
+        };
+        Player.getPlayerStats.mockResolvedValue(mockPlayerStats);
+
+        // Act
+        const response = await request(app).get("/players/testuser").set("Authorization", "Bearer valid.user.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app).get("/players/testuser");
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.message).toBe("Authentication required to view player information");
+      });
+    });
+
+    describe("POST /players/submit-score", () => {
+      it("should allow user to submit score", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        const mockResult = { success: true, newScore: 75 };
+        Player.submitScore.mockResolvedValue(mockResult);
+        Player.findByUsername.mockResolvedValue({ id: 1, username: "testuser" });
+
+        // Act
+        const response = await request(app)
+          .post("/players/submit-score")
+          .set("Authorization", "Bearer valid.user.token")
+          .send({ username: "testuser", riddleId: "riddle123", timeToSolve: 45 });
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app)
+          .post("/players/submit-score")
+          .send({ score: 75 });
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
+    });
   });
 });

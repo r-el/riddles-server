@@ -188,10 +188,15 @@ npm run dev
 | Method | Endpoint                | Description                      | Auth Required |
 | ------ | ----------------------- | -------------------------------- | ------------- |
 | GET    | `/players`              | Get all players (admin only)     | Yes (Admin)   |
-| POST   | `/players`              | Create new player                | Yes (User)    |
-| GET    | `/players/:username`    | Get player stats and history     | Yes (User)    |
-| POST   | `/players/submit-score` | Submit solving time for a riddle | Yes (User)    |
 | GET    | `/players/leaderboard`  | Get top players leaderboard      | Yes (User)    |
+| POST   | `/players`              | Create new player                | Yes (Admin)   |
+| GET    | `/players/:username`    | Get player stats and history     | Required*     |
+| POST   | `/players/submit-score` | Submit solving time for a riddle | Yes (User)    |
+
+*Authentication levels for player stats:
+- Without token: Access denied (401)
+- With user token: Returns basic public player information
+- With admin token or own profile: Returns enhanced private details
 
 ### System Endpoints
 
@@ -306,7 +311,7 @@ curl -X POST http://localhost:3000/riddles \
 ```bash
 curl -X POST http://localhost:3000/players \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Authorization: Bearer YOUR_ADMIN_JWT_TOKEN" \
   -d '{"username": "player1"}'
 ```
 
