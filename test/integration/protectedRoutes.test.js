@@ -23,6 +23,27 @@ describe("Protected Routes Integration", () => {
     const mockRiddles = [{ _id: "1", question: "Test question", answer: "Test answer", level: "easy" }];
 
     describe("GET /riddles", () => {
+      it("should allow access with valid user token", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        Riddle.findAll.mockResolvedValue(mockRiddles);
+
+        // Act
+        const response = await request(app).get("/riddles").set("Authorization", "Bearer valid.user.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
     });
   });
 });
