@@ -23,7 +23,8 @@ exports.register = catchAsync(async (req, res) => {
   const result = await authService.registerUser(username, password, adminCode);
 
   // Log successful registration (without sensitive data)
-  console.log(`New user registered: ${username} with role: ${result.user.role}`);
+  if (process.env.NODE_ENV !== "test")
+    console.log(`New user registered: ${username} with role: ${result.user.role}`);
 
   res.status(201).json({
     success: true,
@@ -48,7 +49,8 @@ exports.login = catchAsync(async (req, res) => {
   const result = await authService.loginUser(username, password);
 
   // Log successful login (without sensitive data)
-  console.log(`User logged in: ${username} with role: ${result.user.role}`);
+  if (process.env.NODE_ENV !== "test")
+    console.log(`User logged in: ${username} with role: ${result.user.role}`);
 
   res.json({
     success: true,
@@ -112,7 +114,7 @@ exports.logout = catchAsync(async (req, res) => {
   const { username } = req.user;
 
   // Log logout event
-  console.log(`User logged out: ${username}`);
+  if (process.env.NODE_ENV !== "test") console.log(`User logged out: ${username}`);
 
   res.json({
     success: true,
