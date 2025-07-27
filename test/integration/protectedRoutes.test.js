@@ -161,6 +161,68 @@ describe("Protected Routes Integration", () => {
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
       });
+
+      it("should deny user access to delete riddle", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+
+        // Act
+        const response = await request(app)
+          .delete("/riddles/1")
+          .set("Authorization", "Bearer valid.user.token");
+
+        // Assert
+        expect(response.status).toBe(403);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toContain("Access denied");
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app).delete("/riddles/1");
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
+    });
+  });
+
+  describe("Players Routes Protection", () => {
+    const mockPlayers = [{ _id: "1", username: "testuser", email: "test@example.com" }];
+
+    describe("GET /players", () => {
+      it("should allow admin to access players list", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        Player.findAll.mockResolvedValue(mockPlayers);
+
+        // Act
+        const response = await request(app).get("/players").set("Authorization", "Bearer valid.admin.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
     });
   });
 });
