@@ -342,6 +342,20 @@ riddles-server/
 - ✔ Data model refactoring
 - ✔ Connection pooling
 
+### Phase 5: Testing Infrastructure (Completed)
+
+- ✔ JWT-based authentication
+- ✔ User registration and login
+- ✔ Password hashing with bcrypt
+- ✔ Role-based access control (user/admin)
+- ✔ Admin-only routes protection
+- ✔ Secure environment variables
+- ✔ Unit tests for authentication service
+- ✔ Integration tests for auth routes
+- ✔ Integration tests for protected routes
+- ✔ Silent testing (no console output during tests)
+
+
 ## Error Handling
 
 The server includes error handling:
