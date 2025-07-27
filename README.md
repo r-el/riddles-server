@@ -243,6 +243,7 @@ curl -X POST http://localhost:3000/riddles \
 ```bash
 curl -X POST http://localhost:3000/players \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{"username": "player1"}'
 ```
 
@@ -251,6 +252,7 @@ curl -X POST http://localhost:3000/players \
 ```bash
 curl -X POST http://localhost:3000/players/submit-score \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
     "username": "player1",
     "riddleId": "507f1f77bcf86cd799439011",
@@ -261,7 +263,8 @@ curl -X POST http://localhost:3000/players/submit-score \
 ### Get Leaderboard
 
 ```bash
-curl http://localhost:3000/players/leaderboard?limit=10
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  http://localhost:3000/players/leaderboard?limit=10
 ```
 
 Response:
