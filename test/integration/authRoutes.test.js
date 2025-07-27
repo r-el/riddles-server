@@ -182,5 +182,21 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe("Username and password are required");
     });
+
+    it("should return 500 for server errors during login", async () => {
+      // Arrange
+      authService.loginUser.mockRejectedValue(new Error("Database connection failed"));
+
+      // Act
+      const response = await request(app).post("/auth/login").send({
+        username: "testuser",
+        password: "password123",
+      });
+
+      // Assert
+      expect(response.status).toBe(500);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toContain("Database connection failed");
+    });
   });
 });
