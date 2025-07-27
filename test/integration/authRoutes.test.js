@@ -67,5 +67,21 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.data.user.role).toBe("admin");
       expect(authService.registerUser).toHaveBeenCalledWith("adminuser", "password123", "secret-admin-code");
     });
+
+    it("should handle registration errors", async () => {
+      // Arrange
+      authService.registerUser.mockRejectedValue(new Error("Username already exists"));
+
+      // Act
+      const response = await request(app).post("/auth/register").send({
+        username: "existinguser",
+        password: "password123",
+      });
+
+      // Assert
+      expect(response.status).toBe(500);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toContain("Username already exists");
+    });
   });
 });
