@@ -245,6 +245,16 @@ describe("Protected Routes Integration", () => {
         expect(response.body.success).toBe(false);
         expect(response.body.error).toContain("Access denied");
       });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app).get("/players");
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
     });
   });
 });
