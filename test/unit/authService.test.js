@@ -87,6 +87,13 @@ describe("Authentication Service", () => {
       // Assert
       expect(result).toBe(false);
     });
-  });
 
+    it("should throw error for missing parameters", async () => {
+      // Act & Assert
+      await expect(authService.comparePassword("", "hash")).rejects.toThrow("Password and hash are required");
+      await expect(authService.comparePassword("password", "")).rejects.toThrow(
+        "Password and hash are required"
+      );
+    });
+  });
 });
