@@ -411,5 +411,46 @@ describe("Protected Routes Integration", () => {
         });
       });
     });
+
+    describe("POST /players/submit-score", () => {
+      it("should allow user to submit score", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        const mockResult = { success: true, newScore: 75 };
+        Player.submitScore.mockResolvedValue(mockResult);
+        Player.findByUsername.mockResolvedValue({ id: 1, username: "testuser" });
+
+        // Act
+        const response = await request(app)
+          .post("/players/submit-score")
+          .set("Authorization", "Bearer valid.user.token")
+          .send({ username: "testuser", riddleId: "riddle123", timeToSolve: 45 });
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
+
+      it("should deny access without authentication", async () => {
+        // Act
+        const response = await request(app)
+          .post("/players/submit-score")
+          .send({ score: 75 });
+
+        // Assert
+        expect(response.status).toBe(401);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toBe("Authentication token is required");
+      });
+    });
   });
 });
