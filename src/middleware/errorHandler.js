@@ -34,14 +34,16 @@ const globalErrorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
-  // Log error details
-  console.error(`${new Date().toISOString()} - ERROR:`, {
-    message: error.message,
-    stack: err.stack,
-    url: req.originalUrl,
-    method: req.method,
-    ip: req.ip,
-  });
+  // Log error details (skip during tests)
+  if (process.env.NODE_ENV !== "test") {
+    console.error(`${new Date().toISOString()} - ERROR:`, {
+      message: error.message,
+      stack: err.stack,
+      url: req.originalUrl,
+      method: req.method,
+      ip: req.ip,
+    });
+  }
 
   // Handle specific error types
   if (err.name === "ValidationError") {

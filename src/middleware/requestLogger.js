@@ -4,6 +4,11 @@
  */
 
 const requestLogger = (req, res, next) => {
+  // Skip logging during tests
+  if (process.env.NODE_ENV === "test") {
+    return next();
+  }
+
   const timestamp = new Date().toISOString();
   const method = req.method;
   const url = req.originalUrl || req.url;
