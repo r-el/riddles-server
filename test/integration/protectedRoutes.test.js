@@ -44,6 +44,28 @@ describe("Protected Routes Integration", () => {
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
       });
+
+      it("should allow access with valid admin token", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 2,
+          username: "admin",
+          role: "admin",
+        });
+        Riddle.findAll.mockResolvedValue(mockRiddles);
+
+        // Act
+        const response = await request(app).get("/riddles").set("Authorization", "Bearer valid.admin.token");
+
+        // Assert
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+      });
     });
   });
 });
