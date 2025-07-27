@@ -47,5 +47,11 @@ describe("Authentication Service", () => {
     it("should throw error for empty password", async () => {
       await expect(authService.hashPassword("")).rejects.toThrow("Password must be a non-empty string");
     });
+
+    it("should throw error for non-string password", async () => {
+      // Act & Assert
+      await expect(authService.hashPassword(123)).rejects.toThrow("Password must be a non-empty string");
+    });
   });
+
 });
