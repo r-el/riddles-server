@@ -223,6 +223,28 @@ describe("Protected Routes Integration", () => {
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
       });
+
+      it("should deny user access to players list", async () => {
+        // Arrange
+        authService.verifyToken.mockReturnValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+        authService.getUserById.mockResolvedValue({
+          id: 1,
+          username: "testuser",
+          role: "user",
+        });
+
+        // Act
+        const response = await request(app).get("/players").set("Authorization", "Bearer valid.user.token");
+
+        // Assert
+        expect(response.status).toBe(403);
+        expect(response.body.success).toBe(false);
+        expect(response.body.error).toContain("Access denied");
+      });
     });
   });
 });
