@@ -98,6 +98,16 @@ npm run dev
 
 ## API Documentation
 
+### Authentication Endpoints
+
+| Method | Endpoint          | Description                  | Auth Required |
+| ------ | ----------------- | ---------------------------- | ------------- |
+| POST   | `/auth/register`  | Register new user            | No            |
+| POST   | `/auth/login`     | Login user                   | No            |
+| POST   | `/auth/logout`    | Logout user                  | Yes           |
+| GET    | `/auth/profile`   | Get current user profile     | Yes           |
+| PUT    | `/auth/profile`   | Update user profile          | Yes           |
+
 ### Riddles Endpoints
 
 | Method | Endpoint                | Description                       |
