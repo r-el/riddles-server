@@ -250,5 +250,24 @@ describe("Authentication Routes Integration", () => {
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe("Invalid token");
     });
+
+    it("should return 401 when user no longer exists", async () => {
+      // Arrange
+      authService.verifyToken.mockReturnValue({
+        id: 999,
+        username: "deleteduser",
+        role: "user",
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      authService.getUserById.mockResolvedValue(null); // User deleted
+
+      // Act
+      const response = await request(app).get("/auth/profile").set("Authorization", "Bearer valid.token");
+
+      // Assert
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe("User not found or has been deleted");
+    });
   });
 });
