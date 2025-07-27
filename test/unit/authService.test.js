@@ -161,5 +161,18 @@ describe("Authentication Service", () => {
       expect(() => authService.verifyToken("expired.token")).toThrow(ApiError);
       expect(() => authService.verifyToken("expired.token")).toThrow("Token has expired");
     });
+
+    it("should throw ApiError for invalid token", () => {
+      // Arrange
+      const error = new Error("Invalid token");
+      error.name = "JsonWebTokenError";
+      jwt.verify.mockImplementation(() => {
+        throw error;
+      });
+
+      // Act & Assert
+      expect(() => authService.verifyToken("invalid.token")).toThrow(ApiError);
+      expect(() => authService.verifyToken("invalid.token")).toThrow("Invalid token");
+    });
   });
 });
