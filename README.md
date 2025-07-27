@@ -110,15 +110,15 @@ npm run dev
 
 ### Riddles Endpoints
 
-| Method | Endpoint                | Description                       |
-| ------ | ----------------------- | --------------------------------- |
-| GET    | `/riddles`              | Get all riddles (with pagination) |
-| GET    | `/riddles/random`       | Get a random riddle               |
-| GET    | `/riddles/:id`          | Get specific riddle by ID         |
-| POST   | `/riddles`              | Create a new riddle               |
-| PUT    | `/riddles/:id`          | Update existing riddle            |
-| DELETE | `/riddles/:id`          | Delete riddle                     |
-| POST   | `/riddles/load-initial` | Bulk load initial riddles         |
+| Method | Endpoint                | Description                       | Auth Required |
+| ------ | ----------------------- | --------------------------------- | ------------- |
+| GET    | `/riddles`              | Get all riddles (with pagination) | Yes (User)    |
+| GET    | `/riddles/random`       | Get a random riddle               | No            |
+| GET    | `/riddles/:id`          | Get specific riddle by ID         | Yes (User)    |
+| POST   | `/riddles`              | Create a new riddle               | Yes (User)    |
+| PUT    | `/riddles/:id`          | Update existing riddle            | Yes (User)    |
+| DELETE | `/riddles/:id`          | Delete riddle                     | Yes (Admin)   |
+| POST   | `/riddles/load-initial` | Bulk load initial riddles         | Yes (Admin)   |
 
 ### Players Endpoints
 
