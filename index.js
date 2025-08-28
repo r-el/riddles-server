@@ -7,10 +7,10 @@
  * 3. Starts the Express server
  * 4. Handles process-level errors
  */
-require("dotenv").config();
-const { connectMongoDB } = require("./src/db/mongodb");
-const { testSupabaseConnection } = require("./src/db/supabase");
-const app = require("./src/server");
+import "dotenv/config";
+import { connectMongoDB } from "./src/db/mongodb.js";
+import { testSupabaseConnection } from "./src/db/supabase.js";
+import app from "./src/server.js";
 
 const PORT = process.env.PORT || 3000;
 

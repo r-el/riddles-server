@@ -3,8 +3,8 @@
  * Handles HTTP requests for user authentication and authorization
  * Implements clean API design with proper error handling
  */
-const { catchAsync, ApiError } = require("../middleware/errorHandler");
-const authService = require("../services/authService");
+import { catchAsync, ApiError } from "../middleware/errorHandler.js";
+import * as authService from "../services/authService.js";
 
 /**
  * Register a new user
@@ -16,7 +16,7 @@ const authService = require("../services/authService");
  * @param {string} req.body.password - Password (6+ characters)
  * @param {string} [req.body.adminCode] - Optional admin secret code
  */
-exports.register = catchAsync(async (req, res) => {
+export const register = catchAsync(async (req, res) => {
   const { username, password, adminCode } = req.body;
 
   // Register user through auth service
@@ -42,7 +42,7 @@ exports.register = catchAsync(async (req, res) => {
  * @param {string} req.body.username - Username
  * @param {string} req.body.password - Password
  */
-exports.login = catchAsync(async (req, res) => {
+export const login = catchAsync(async (req, res) => {
   const { username, password } = req.body;
 
   // Login user through auth service
@@ -65,7 +65,7 @@ exports.login = catchAsync(async (req, res) => {
  * @route GET /auth/profile
  * @access Private (requires authentication)
  */
-exports.getProfile = catchAsync(async (req, res) => {
+export const getProfile = catchAsync(async (req, res) => {
   // User data is already available from auth middleware
   const { id, username, role } = req.user;
 
@@ -87,7 +87,7 @@ exports.getProfile = catchAsync(async (req, res) => {
  * @route POST /auth/validate
  * @access Private (requires authentication)
  */
-exports.validateToken = catchAsync(async (req, res) => {
+export const validateToken = catchAsync(async (req, res) => {
   // If we reach here, token is valid (middleware already validated it)
   const { id, username, role } = req.user;
 
@@ -110,7 +110,7 @@ exports.validateToken = catchAsync(async (req, res) => {
  * @route POST /auth/logout
  * @access Private (requires authentication)
  */
-exports.logout = catchAsync(async (req, res) => {
+export const logout = catchAsync(async (req, res) => {
   const { username } = req.user;
 
   // Log logout event
@@ -131,7 +131,7 @@ exports.logout = catchAsync(async (req, res) => {
  * @param {string} req.body.currentPassword - Current password
  * @param {string} req.body.newPassword - New password (6+ characters)
  */
-exports.changePassword = catchAsync(async (req, res) => {
+export const changePassword = catchAsync(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   const userId = req.user.id;
 
@@ -151,7 +151,7 @@ exports.changePassword = catchAsync(async (req, res) => {
  * @route GET /auth/stats
  * @access Private (admin only)
  */
-exports.getAuthStats = catchAsync(async (req, res) => {
+export const getAuthStats = catchAsync(async (req, res) => {
   // This would require implementing stats collection
   // For now, return basic info
   res.json({

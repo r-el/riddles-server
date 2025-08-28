@@ -73,7 +73,7 @@ const globalErrorHandler = (err, req, res, next) => {
   });
 };
 
-module.exports = {
+export {
   ApiError,
   catchAsync,
   globalErrorHandler,

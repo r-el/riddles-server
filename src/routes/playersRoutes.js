@@ -2,9 +2,9 @@
  * Players Routes
  * Including authentication middleware where appropriate
  */
-const express = require("express");
-const playersController = require("../controllers/playersController");
-const { optionalAuth, authenticate, authorize } = require("../middleware/authMiddleware");
+import express from "express";
+import * as playersController from "../controllers/playersController.js";
+import { optionalAuth, authenticate, authorize } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Get all players - admin only
@@ -22,4 +22,4 @@ router.get("/:username", optionalAuth(), playersController.getPlayerByUsername);
 // Submit a score - requires user authentication
 router.post("/submit-score", authenticate(), playersController.submitScore);
 
-module.exports = router;
+export default router;

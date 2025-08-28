@@ -2,8 +2,8 @@
  * Player Model
  * Supabase-based model for players
  */
-const { supabase } = require("../db/supabase");
-const { ApiError } = require("../middleware/errorHandler");
+import { supabase } from "../db/supabase.js";
+import { ApiError } from "../middleware/errorHandler.js";
 
 /**
  * @class Player
@@ -256,4 +256,4 @@ class Player {
   }
 }
 
-module.exports = Player;
+export default Player;

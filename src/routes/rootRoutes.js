@@ -1,7 +1,7 @@
 /**
  * Root Routes
  */
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 // Root route
@@ -41,4 +41,4 @@ router.get("/", (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

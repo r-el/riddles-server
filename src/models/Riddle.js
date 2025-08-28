@@ -2,9 +2,9 @@
  * Riddle Model
  * MongoDB-based model for riddles
  */
-const { ObjectId } = require("mongodb");
-const { getRiddlesCollection } = require("../db/mongodb");
-const { ApiError } = require("../middleware/errorHandler");
+import { ObjectId } from "mongodb";
+import { getRiddlesCollection } from "../db/mongodb.js";
+import { ApiError } from "../middleware/errorHandler.js";
 
 /**
  * Creates a new Riddle instance.
@@ -139,4 +139,4 @@ class Riddle {
   }
 }
 
-module.exports = Riddle;
+export default Riddle;

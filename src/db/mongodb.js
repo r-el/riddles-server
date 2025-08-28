@@ -3,8 +3,8 @@
  *
  * Manages connection to MongoDB Atlas for riddles storage
  */
-const { MongoClient } = require("mongodb");
-require("dotenv").config();
+import { MongoClient } from "mongodb";
+import "dotenv/config";
 
 // Store client and collection as private variables
 let client;
@@ -89,7 +89,7 @@ async function closeMongoDB() {
   }
 }
 
-module.exports = {
+export {
   connectMongoDB,
   getRiddlesCollection,
   getMongoDBStatus,
