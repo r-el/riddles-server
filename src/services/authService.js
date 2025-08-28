@@ -3,10 +3,10 @@
  * Handles user authentication, token generation and validation
  * Implements SOLID principles with single responsibility for auth operations
  */
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { ApiError } = require("../middleware/errorHandler");
-const { supabase } = require("../db/supabase");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { ApiError } from "../middleware/errorHandler.js";
+import { supabase } from "../db/supabase.js";
 
 // Configuration constants
 const SALT_ROUNDS = 10;
@@ -281,7 +281,7 @@ async function getUserById(userId) {
   }
 }
 
-module.exports = {
+export {
   hashPassword,
   comparePassword,
   generateToken,
