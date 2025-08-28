@@ -26,9 +26,9 @@ describe("Authentication Service", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Set required environment variables for tests
-    process.env.JWT_SECRET = "test-secret";
+    process.env.JWT_SECRET = "test-jwt-secret-key-for-testing-only";
     process.env.JWT_EXPIRES_IN = "1h";
-    process.env.ADMIN_SECRET_CODE = "admin123";
+    process.env.ADMIN_SECRET_CODE = "test-admin-code-123";
   });
 
   describe("hashPassword", () => {
@@ -112,20 +112,13 @@ describe("Authentication Service", () => {
       const result = authService.generateToken(user);
 
       // Assert
-      expect(jwt.sign).toHaveBeenCalledWith({ id: 1, username: "testuser", role: "user" }, "test-secret", {
+      expect(jwt.sign).toHaveBeenCalledWith({ id: 1, username: "testuser", role: "user" }, "test-jwt-secret-key-for-testing-only", {
         expiresIn: "1h",
       });
       expect(result).toBe(mockToken);
     });
 
-    it("should throw error for missing JWT_SECRET", () => {
-      // Arrange
-      delete process.env.JWT_SECRET;
-      const user = { id: 1, username: "testuser", role: "user" };
-
-      // Act & Assert
-      expect(() => authService.generateToken(user)).toThrow("JWT_SECRET not configured");
-    });
+    // Note: JWT_SECRET validation is now handled at config level, not runtime
 
     it("should throw error for invalid user object", () => {
       // Act & Assert
@@ -147,7 +140,7 @@ describe("Authentication Service", () => {
       const result = authService.verifyToken(token);
 
       // Assert
-      expect(jwt.verify).toHaveBeenCalledWith(token, "test-secret");
+      expect(jwt.verify).toHaveBeenCalledWith(token, "test-jwt-secret-key-for-testing-only");
       expect(result).toEqual(decoded);
     });
 
@@ -177,13 +170,7 @@ describe("Authentication Service", () => {
       expect(() => authService.verifyToken("invalid.token")).toThrow("Invalid token");
     });
 
-    it("should throw error for missing JWT_SECRET", () => {
-      // Arrange
-      delete process.env.JWT_SECRET;
-
-      // Act & Assert
-      expect(() => authService.verifyToken("token")).toThrow("JWT_SECRET not configured");
-    });
+    // Note: JWT_SECRET validation is now handled at config level, not runtime
 
     it("should throw ApiError for invalid token format", () => {
       // Act & Assert
