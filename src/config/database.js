@@ -30,10 +30,4 @@ export const databaseConfig = {
   },
 };
 
-/**
- * Server configuration
- */
-export const serverConfig = {
-  port: process.env.PORT || 3000,
-  host: process.env.HOST || "localhost",
-};
+export default databaseConfig;
