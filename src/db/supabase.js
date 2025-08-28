@@ -3,8 +3,8 @@
  *
  * Manages connection to Supabase for player data
  */
-const { createClient } = require("@supabase/supabase-js");
-require("dotenv").config();
+import { createClient } from "@supabase/supabase-js";
+import "dotenv/config";
 
 // Validate environment variables
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
@@ -48,7 +48,7 @@ function getSupabaseClient() {
   return supabase;
 }
 
-module.exports = {
+export {
   supabase,
   testSupabaseConnection,
   getSupabaseClient,
