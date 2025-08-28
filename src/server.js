@@ -37,20 +37,13 @@ const rootRoutes = require("./routes/rootRoutes");
 const riddlesRoutes = require("./routes/riddlesRoutes");
 const playersRoutes = require("./routes/playersRoutes");
 const authRoutes = require("./routes/authRoutes");
+const healthRoutes = require("./routes/healthRoutes");
 
 app.use("/", rootRoutes);
 app.use("/riddles", riddlesRoutes);
 app.use("/players", playersRoutes);
 app.use("/auth", authRoutes);
-
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
+app.use("/health", healthRoutes);
 
 // Error handler (must be last)
 app.use(globalErrorHandler);
