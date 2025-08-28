@@ -4,7 +4,7 @@
  * Manages connection to MongoDB Atlas for riddles storage
  */
 import { MongoClient } from "mongodb";
-import "dotenv/config";
+import { mongoConfig } from "../config/database.js";
 
 // Store client and collection as private variables
 let client;
@@ -12,12 +12,7 @@ let riddlesCollection;
 let connectionStatus = "disconnected";
 
 // Connection options with pooling
-const connectionOptions = {
-  maxPoolSize: 10,
-  minPoolSize: 2,
-  maxIdleTimeMS: 30000,
-  serverSelectionTimeoutMS: 5000,
-};
+const connectionOptions = mongoConfig.options;
 
 /**
  * Creates connection to MongoDB with retry logic
@@ -31,10 +26,10 @@ async function connectMongoDB(maxRetries = 3, retryDelay = 2000) {
       console.log(`Attempting MongoDB connection... (attempt ${retries + 1}/${maxRetries})`);
 
       // Connection with pooling options
-      client = await MongoClient.connect(process.env.MONGODB_URI, connectionOptions);
+      client = await MongoClient.connect(mongoConfig.uri, connectionOptions);
 
       // Access database and collection
-      const db = client.db(process.env.MONGODB_DB_NAME || "riddles_game");
+      const db = client.db(mongoConfig.dbName);
       riddlesCollection = db.collection("riddles");
 
       console.log("✔ MongoDB connection established successfully");
