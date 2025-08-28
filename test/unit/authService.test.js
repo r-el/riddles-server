@@ -2,10 +2,10 @@
  * Authentication Service Unit Tests
  * Tests the core authentication functionality without database dependencies
  */
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const authService = require("../../src/services/authService");
-const { ApiError } = require("../../src/middleware/errorHandler");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import * as authService from "../../src/services/authService.js";
+import { ApiError } from "../../src/middleware/errorHandler.js";
 
 // Mock dependencies
 jest.mock("bcrypt");
