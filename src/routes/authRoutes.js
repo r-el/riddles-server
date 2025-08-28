@@ -2,9 +2,9 @@
  * Authentication Routes
  * Defines all routes related to user authentication and authorization
  */
-const express = require("express");
-const authController = require("../controllers/authController");
-const { authenticate, requireAdmin } = require("../middleware/authMiddleware");
+import express from "express";
+import * as authController from "../controllers/authController.js";
+import { authenticate, requireAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -41,4 +41,4 @@ router.put("/change-password", authenticate(), authController.changePassword);
 // Get authentication statistics
 router.get("/stats", authenticate(), requireAdmin(), authController.getAuthStats);
 
-module.exports = router;
+export default router;

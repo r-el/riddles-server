@@ -1,14 +1,14 @@
 /**
  * Express Application Setup
  */
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import "dotenv/config";
 
 // Import middleware
-const { globalErrorHandler } = require("./middleware/errorHandler");
-const requestLogger = require("./middleware/requestLogger");
+import { globalErrorHandler } from "./middleware/errorHandler.js";
+import requestLogger from "./middleware/requestLogger.js";
 
 // Create Express application
 const app = express();
@@ -33,26 +33,19 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(requestLogger);
 
 // Routes
-const rootRoutes = require("./routes/rootRoutes");
-const riddlesRoutes = require("./routes/riddlesRoutes");
-const playersRoutes = require("./routes/playersRoutes");
-const authRoutes = require("./routes/authRoutes");
+import rootRoutes from "./routes/rootRoutes.js";
+import riddlesRoutes from "./routes/riddlesRoutes.js";
+import playersRoutes from "./routes/playersRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import healthRoutes from "./routes/healthRoutes.js";
 
 app.use("/", rootRoutes);
 app.use("/riddles", riddlesRoutes);
 app.use("/players", playersRoutes);
 app.use("/auth", authRoutes);
-
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-  });
-});
+app.use("/health", healthRoutes);
 
 // Error handler (must be last)
 app.use(globalErrorHandler);
 
-module.exports = app;
+export default app;

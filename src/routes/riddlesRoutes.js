@@ -2,9 +2,9 @@
  * Riddles Routes
  * Including authentication and authorization middleware
  */
-const express = require("express");
-const riddlesController = require("../controllers/riddlesController");
-const { authenticate, requireUserOrAdmin, requireAdmin } = require("../middleware/authMiddleware");
+import express from "express";
+import * as riddlesController from "../controllers/riddlesController.js";
+import { authenticate, requireUserOrAdmin, requireAdmin } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Get all riddles - requires user or admin authentication
@@ -28,4 +28,4 @@ router.delete("/:id", authenticate(), requireAdmin(), riddlesController.deleteRi
 // Load initial riddles - requires admin authentication only
 router.post("/load-initial", authenticate(), requireAdmin(), riddlesController.loadInitialRiddles);
 
-module.exports = router;
+export default router;

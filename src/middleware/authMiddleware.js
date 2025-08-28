@@ -2,8 +2,8 @@
  * Authentication Middleware
  * Handles user authentication and authorization for protected routes
  */
-const { ApiError } = require("./errorHandler");
-const { verifyToken, getUserById } = require("../services/authService");
+import { ApiError } from "./errorHandler.js";
+import { verifyToken, getUserById } from "../services/authService.js";
 
 /**
  * Extract token from request headers or query parameters
@@ -166,7 +166,7 @@ function authAndAuthorize(...allowedRoles) {
   return [authenticate({ required: true }), authorize(...allowedRoles)];
 }
 
-module.exports = {
+export {
   authenticate,
   authorize,
   requireUserOrAdmin,

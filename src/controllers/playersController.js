@@ -1,13 +1,13 @@
 /**
  * Players Controller
  */
-const Player = require("../models/Player");
-const { catchAsync, ApiError } = require("../middleware/errorHandler");
+import Player from "../models/Player.js";
+import { catchAsync, ApiError } from "../middleware/errorHandler.js";
 
 /**
  * Create a new player
  */
-exports.createPlayer = catchAsync(async (req, res) => {
+export const createPlayer = catchAsync(async (req, res) => {
   const { username } = req.body;
 
   if (!username) throw new ApiError(400, "Username is required");
@@ -37,7 +37,7 @@ exports.createPlayer = catchAsync(async (req, res) => {
  * Get player by username
  * Optional authentication provides enhanced data based on user role
  */
-exports.getPlayerByUsername = catchAsync(async (req, res) => {
+export const getPlayerByUsername = catchAsync(async (req, res) => {
   const { username } = req.params;
   const user = req.user; // Optional - may be undefined if no token provided
   
@@ -78,7 +78,7 @@ exports.getPlayerByUsername = catchAsync(async (req, res) => {
 /**
  * Submit a score
  */
-exports.submitScore = catchAsync(async (req, res) => {
+export const submitScore = catchAsync(async (req, res) => {
   const { username, riddleId, timeToSolve } = req.body;
 
   if (!username || !riddleId || !timeToSolve)
@@ -101,7 +101,7 @@ exports.submitScore = catchAsync(async (req, res) => {
 /**
  * Get leaderboard
  */
-exports.getLeaderboard = catchAsync(async (req, res) => {
+export const getLeaderboard = catchAsync(async (req, res) => {
   const { limit = 10 } = req.query;
   const leaderboard = await Player.getLeaderboard(parseInt(limit));
 
@@ -114,7 +114,7 @@ exports.getLeaderboard = catchAsync(async (req, res) => {
 /**
  * Get all players (admin only)
  */
-exports.getAllPlayers = catchAsync(async (req, res) => {
+export const getAllPlayers = catchAsync(async (req, res) => {
   const players = await Player.findAll();
 
   res.json({

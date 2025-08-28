@@ -2,27 +2,29 @@
  * Authentication Service Unit Tests
  * Tests the core authentication functionality without database dependencies
  */
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const authService = require("../../src/services/authService");
-const { ApiError } = require("../../src/middleware/errorHandler");
+import { describe, test, expect, beforeEach, it, vi } from 'vitest';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import * as authService from "../../src/services/authService.js";
+import { ApiError } from "../../src/middleware/errorHandler.js";
 
 // Mock dependencies
-jest.mock("bcrypt");
-jest.mock("jsonwebtoken");
-jest.mock("../../src/db/supabase", () => ({
+// Mock dependencies
+vi.mock("bcrypt");
+vi.mock("jsonwebtoken");
+vi.mock("../../src/db/supabase.js", () => ({
   supabase: {
-    from: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    eq: jest.fn().mockReturnThis(),
-    single: jest.fn(),
-    insert: jest.fn().mockReturnThis(),
+    from: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn(),
+    insert: vi.fn().mockReturnThis(),
   },
 }));
 
 describe("Authentication Service", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     // Set required environment variables for tests
     process.env.JWT_SECRET = "test-secret";
     process.env.JWT_EXPIRES_IN = "1h";
