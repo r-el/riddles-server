@@ -6,6 +6,7 @@
  * @param {string} message - Error message
  * @param {boolean} isOperational - Indicates if the error is operational (true) or program error (false)
  */
+import { serverConfig } from "../config/server.js";
 
 class ApiError extends Error {
   constructor(statusCode, message, isOperational = true) {
@@ -35,7 +36,7 @@ const globalErrorHandler = (err, req, res, next) => {
   error.message = err.message;
 
   // Log error details (skip during tests)
-  if (process.env.NODE_ENV !== "test") {
+  if (serverConfig.environment !== "test") {
     console.error(`${new Date().toISOString()} - ERROR:`, {
       message: error.message,
       stack: err.stack,
@@ -69,12 +70,8 @@ const globalErrorHandler = (err, req, res, next) => {
   res.status(error.statusCode || 500).json({
     success: false,
     error: error.message || "Internal server error",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    ...(serverConfig.environment === "development" && { stack: err.stack }),
   });
 };
 
-export {
-  ApiError,
-  catchAsync,
-  globalErrorHandler,
-};
+export { ApiError, catchAsync, globalErrorHandler };

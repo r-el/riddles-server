@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.status(200).json({
     message: "Welcome to Riddles Server!",
-    version: "3.2.4",
+    version: "3.2.5",
     features: {
       databases: "MongoDB for Riddles and Supabase (postgres) for Players",
       riddles: [

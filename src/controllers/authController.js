@@ -5,6 +5,7 @@
  */
 import { catchAsync, ApiError } from "../middleware/errorHandler.js";
 import * as authService from "../services/authService.js";
+import { serverConfig } from "../config/server.js";
 
 /**
  * Register a new user
@@ -23,7 +24,7 @@ export const register = catchAsync(async (req, res) => {
   const result = await authService.registerUser(username, password, adminCode);
 
   // Log successful registration (without sensitive data)
-  if (process.env.NODE_ENV !== "test")
+  if (serverConfig.environment !== "test")
     console.log(`New user registered: ${username} with role: ${result.user.role}`);
 
   res.status(201).json({
@@ -49,7 +50,7 @@ export const login = catchAsync(async (req, res) => {
   const result = await authService.loginUser(username, password);
 
   // Log successful login (without sensitive data)
-  if (process.env.NODE_ENV !== "test")
+  if (serverConfig.environment !== "test")
     console.log(`User logged in: ${username} with role: ${result.user.role}`);
 
   res.json({
@@ -114,7 +115,7 @@ export const logout = catchAsync(async (req, res) => {
   const { username } = req.user;
 
   // Log logout event
-  if (process.env.NODE_ENV !== "test") console.log(`User logged out: ${username}`);
+  if (serverConfig.environment !== "test") console.log(`User logged out: ${username}`);
 
   res.json({
     success: true,

@@ -10,9 +10,10 @@
 import "dotenv/config";
 import { connectMongoDB } from "./src/db/mongodb.js";
 import { testSupabaseConnection } from "./src/db/supabase.js";
+import { serverConfig } from "./src/config/server.js";
 import app from "./src/server.js";
 
-const PORT = process.env.PORT || 3000;
+const PORT = serverConfig.port;
 
 /**
  * Start server after initializing databases
@@ -32,7 +33,7 @@ async function startServer() {
     // Start Express server
     app.listen(PORT, () => {
       console.log("✔ Riddles server running on http://localhost:" + PORT);
-      console.log(`✔ Environment: ${process.env.NODE_ENV || "development"}`);
+      console.log(`✔ Environment: ${serverConfig.environment}`);
       console.log("✔ All systems ready!");
     });
   } catch (error) {

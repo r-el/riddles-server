@@ -8,7 +8,6 @@ import app from "../../src/server.js";
 import { ApiError } from "../../src/middleware/errorHandler.js";
 
 // Mock dependencies to avoid real database calls during testing
-// Mock dependencies to avoid real database calls during testing
 vi.mock("../../src/services/authService.js");
 import * as authService from "../../src/services/authService.js";
 

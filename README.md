@@ -40,6 +40,12 @@ This project is a backend server that manages a collection of riddles and tracks
 ```
 riddles-server/
 ├── src/
+│   ├── config/              # Configuration management
+│   │   ├── auth.js              # Authentication config
+│   │   ├── cors.js              # CORS configuration
+│   │   ├── database.js          # Database configurations
+│   │   ├── server.js            # Server configuration
+│   │   └── index.js             # Central config exports
 │   ├── controllers/          # Request handlers
 │   │   ├── authController.js     # Authentication logic
 │   │   ├── playersController.js  # Player operations
@@ -62,17 +68,24 @@ riddles-server/
 │   │   ├── mongodb.js           # MongoDB setup
 │   │   └── supabase.js          # Supabase setup
 │   └── server.js            # Main server file
-├── test/                    # Test suite
+├── test/                    # Test suite (organized by modules)
 │   ├── setup.js                 # Global test config
-│   ├── unit/                    # Unit tests
-│   │   └── authService.test.js
-│   └── integration/             # Integration tests
-│       ├── authRoutes.test.js
-│       └── protectedRoutes.test.js
-├── database/                # Database scripts
-│   └── auth_migration.sql       # SQL migrations
+│   ├── auth/                    # Authentication tests
+│   │   ├── authService.test.js      # Auth service unit tests
+│   │   ├── authRoutes.test.js       # Auth routes integration tests
+│   │   └── protectedRoutes.test.js  # Protected routes tests
+│   ├── players/                 # Player module tests
+│   │   ├── players.unit.test.js     # Player unit tests
+│   │   └── players.integration.test.js # Player integration tests
+│   └── riddles/                 # Riddle module tests
+│       ├── riddles.unit.test.js     # Riddle unit tests
+│       └── riddles.integration.test.js # Riddle integration tests
 ├── docs/                    # Documentation
-│   └── api.md                   # API documentation
+│   ├── database/                # Database documentation
+│   │   ├── README.md               # Database migration guide
+│   │   └── auth_migration.sql      # SQL migrations
+│   ├── api.md                   # API documentation
+│   └── riddles-server.postman_collection.json # Postman collection
 ├── .env.example             # Environment template
 ├── package.json             # Dependencies
 └── README.md               # This file
@@ -126,7 +139,11 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 
 ### Database Setup
 
-#### Supabase Tables
+For detailed database setup instructions, including table creation and migration guides, see:
+- [Database Documentation](./docs/database/README.md)
+- [Authentication Migration](./docs/database/auth_migration.sql)
+
+#### Quick Supabase Setup
 
 Create these tables in your Supabase database:
 
@@ -157,6 +174,31 @@ npm start
 
 # Development mode with auto-restart
 npm run dev
+```
+
+## Configuration Management
+
+The project uses a centralized configuration system located in `src/config/`:
+
+### Configuration Structure
+
+- **`src/config/auth.js`** - JWT and authentication settings
+- **`src/config/cors.js`** - Cross-Origin Resource Sharing configuration  
+- **`src/config/database.js`** - MongoDB and Supabase connection settings
+- **`src/config/server.js`** - Server and environment configuration
+- **`src/config/index.js`** - Central exports for all configurations
+
+
+### Usage Example
+
+```javascript
+import { authConfig, serverConfig } from '../config/index.js';
+
+// Instead of process.env.JWT_SECRET
+const secret = authConfig.jwtSecret;
+
+// Instead of process.env.PORT || 3000
+const port = serverConfig.port;
 ```
 
 ## API Documentation
@@ -398,16 +440,21 @@ Response:
 
 ### Test Structure
 
-The project includes comprehensive testing with Vitest (ES modules native support):
+The project includes comprehensive testing with Vitest (ES modules native support), organized by feature modules:
 
 ```
 test/
-├── setup.js                      # Global test configuration
-├── unit/
-│   └── authService.test.js       # Authentication service unit tests
-└── integration/
-    ├── authRoutes.test.js        # Authentication endpoints tests
-    └── protectedRoutes.test.js   # Route protection tests
+├── setup.js                          # Global test configuration
+├── auth/                             # Authentication module tests
+│   ├── authService.test.js               # Auth service unit tests
+│   ├── authRoutes.test.js                # Auth endpoints integration tests
+│   └── protectedRoutes.test.js           # Route protection tests
+├── players/                          # Player module tests
+│   ├── players.unit.test.js              # Player unit tests
+│   └── players.integration.test.js       # Player integration tests
+└── riddles/                          # Riddle module tests
+    ├── riddles.unit.test.js              # Riddle unit tests
+    └── riddles.integration.test.js       # Riddle integration tests
 ```
 
 Configuration file: `vitest.config.js`
