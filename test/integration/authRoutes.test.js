@@ -2,17 +2,19 @@
  * Authentication Routes Integration Tests
  * Tests the complete authentication flow through HTTP endpoints
  */
+import { describe, test, expect, beforeEach, it, vi } from 'vitest';
 import request from "supertest";
 import app from "../../src/server.js";
 import { ApiError } from "../../src/middleware/errorHandler.js";
 
 // Mock dependencies to avoid real database calls during testing
-jest.mock("../../src/services/authService.js");
+// Mock dependencies to avoid real database calls during testing
+vi.mock("../../src/services/authService.js");
 import * as authService from "../../src/services/authService.js";
 
 describe("Authentication Routes Integration", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("POST /auth/register", () => {
