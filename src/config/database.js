@@ -1,33 +1,46 @@
 /**
  * Database Configuration
- * Configuration settings for the riddles database
+ * Configuration settings for MongoDB and Supabase
  */
 
-import path from "path";
-import { fileURLToPath } from "url";
 import { config } from "dotenv";
 
 // Load environment variables from .env file
 config();
 
-// Get current directory (ES modules equivalent of __dirname)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+/**
+ * MongoDB configuration
+ */
+export const mongoConfig = {
+  uri: process.env.MONGODB_URI,
+  dbName: process.env.MONGODB_DB_NAME || "riddles_game",
+  options: {
+    maxPoolSize: 10,
+    minPoolSize: 2,
+    maxIdleTimeMS: 30000,
+    serverSelectionTimeoutMS: 5000,
+  },
+};
 
 /**
- * Database configuration
+ * Supabase configuration
+ */
+export const supabaseConfig = {
+  url: process.env.SUPABASE_URL,
+  key: process.env.SUPABASE_KEY,
+  options: {
+    auth: {
+      persistSession: false, // Disable session persistence for server-side usage
+    },
+  },
+};
+
+/**
+ * Combined database configuration
  */
 export const databaseConfig = {
-  // Path to the riddles JSON file
-  riddlesFilePath: path.join(__dirname, "../../data/riddles.json"),
-  playersFilePath: path.join(__dirname, "../../data/players.json"),
-
-  // json-file-crud options
-  options: {
-    idField: "id",
-    uniqueFields: [],
-    autoId: true,
-  },
+  mongo: mongoConfig,
+  supabase: supabaseConfig,
 };
 
 export default databaseConfig;
