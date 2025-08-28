@@ -11,17 +11,7 @@ process.env.ADMIN_SECRET_CODE = "test-admin-code-123";
 
 // Disable console logs during testing (optional)
 if (process.env.SILENT_TESTS === "true") {
-  console.log = jest.fn();
-  console.error = jest.fn();
-  console.warn = jest.fn();
+  console.log = () => {};
+  console.error = () => {};
+  console.warn = () => {};
 }
-
-// Global test timeout
-jest.setTimeout(10000);
-
-// Mock console for specific tests if needed
-global.mockConsole = {
-  log: jest.fn(),
-  error: jest.fn(),
-  warn: jest.fn(),
-};
