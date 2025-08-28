@@ -15,11 +15,6 @@ export default {
   testTimeout: 10000,
   transform: {},
   extensionsToTreatAsEsm: [".js"],
-  globals: {
-    "ts-jest": {
-      useESM: true,
-    },
-  },
   moduleNameMapping: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
