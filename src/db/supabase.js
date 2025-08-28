@@ -4,21 +4,16 @@
  * Manages connection to Supabase for player data
  */
 import { createClient } from "@supabase/supabase-js";
-import "dotenv/config";
+import { supabaseConfig } from "../config/database.js";
 
 // Validate environment variables
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
+if (!supabaseConfig.url || !supabaseConfig.key) {
   console.error("✘ Missing Supabase configuration. Please check your .env file.");
   process.exit(1);
 }
 
 // Create Supabase client
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, {
-  auth: {
-    // Not needed for server-side
-    persistSession: false, // Disable session persistence for server-side usage
-  },
-});
+const supabase = createClient(supabaseConfig.url, supabaseConfig.key, supabaseConfig.options);
 
 /**
  * Test Supabase player connection

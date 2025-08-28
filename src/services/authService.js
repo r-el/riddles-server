@@ -7,10 +7,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { ApiError } from "../middleware/errorHandler.js";
 import { supabase } from "../db/supabase.js";
+import { authConfig } from "../config/auth.js";
 
 // Configuration constants
-const SALT_ROUNDS = 10;
-const DEFAULT_TOKEN_EXPIRATION = process.env.JWT_EXPIRES_IN || "7d";
+const SALT_ROUNDS = authConfig.bcryptRounds;
+const DEFAULT_TOKEN_EXPIRATION = authConfig.jwtExpiresIn;
 
 /**
  * Hash a password using bcrypt
@@ -58,7 +59,7 @@ async function comparePassword(password, hash) {
  * @throws {Error} - If token generation fails
  */
 function generateToken(user) {
-  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not configured in environment variables");
+  if (!authConfig.jwtSecret) throw new Error("JWT_SECRET not configured in environment variables");
 
   if (!user || !user.id || !user.username || !user.role)
     throw new Error("User object must contain id, username, and role");
@@ -72,7 +73,7 @@ function generateToken(user) {
 
     const expiresIn = DEFAULT_TOKEN_EXPIRATION;
 
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
+    return jwt.sign(payload, authConfig.jwtSecret, { expiresIn });
   } catch (error) {
     throw new Error("Failed to generate token: " + error.message);
   }
@@ -86,12 +87,12 @@ function generateToken(user) {
  * @throws {ApiError} - If token is invalid or expired
  */
 function verifyToken(token) {
-  if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not configured in environment variables");
+  if (!authConfig.jwtSecret) throw new Error("JWT_SECRET not configured in environment variables");
 
   if (!token || typeof token !== "string") throw new ApiError(401, "Invalid token format");
 
   try {
-    return jwt.verify(token, process.env.JWT_SECRET);
+    return jwt.verify(token, authConfig.jwtSecret);
   } catch (error) {
     if (error.name === "TokenExpiredError") {
       throw new ApiError(401, "Token has expired");
@@ -148,7 +149,7 @@ async function registerUser(username, password, adminCode = null) {
 
     // Determine role
     let role = "user";
-    if (adminCode && adminCode === process.env.ADMIN_SECRET_CODE) {
+    if (adminCode && adminCode === authConfig.adminSecretCode) {
       role = "admin";
     }
 

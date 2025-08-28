@@ -9,6 +9,7 @@ import "dotenv/config";
 // Import middleware
 import { globalErrorHandler } from "./middleware/errorHandler.js";
 import requestLogger from "./middleware/requestLogger.js";
+import { corsConfig } from "./config/cors.js";
 
 // Create Express application
 const app = express();
@@ -18,12 +19,7 @@ app.use(helmet());
 app.disable("x-powered-by");
 
 // CORS configuration
-app.use(
-  cors({
-    origin: process.env.ALLOWED_ORIGINS?.split(",") || ["http://localhost:3000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  })
-);
+app.use(cors(corsConfig));
 
 // Basic middleware
 app.use(express.json({ limit: "10mb" }));
