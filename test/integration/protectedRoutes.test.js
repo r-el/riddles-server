@@ -2,13 +2,15 @@
  * Protected Routes Integration Tests
  * Tests route protection for riddles and players endpoints
  */
+import { describe, test, expect, beforeEach, it, vi } from 'vitest';
 import request from "supertest";
 import app from "../../src/server.js";
 
 // Mock dependencies
-jest.mock("../../src/services/authService.js");
-jest.mock("../../src/models/Riddle.js");
-jest.mock("../../src/models/Player.js");
+// Mock dependencies
+vi.mock("../../src/services/authService.js");
+vi.mock("../../src/models/Riddle.js");
+vi.mock("../../src/models/Player.js");
 
 import * as authService from "../../src/services/authService.js";
 import Riddle from "../../src/models/Riddle.js";
@@ -16,7 +18,7 @@ import Player from "../../src/models/Player.js";
 
 describe("Protected Routes Integration", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("Riddles Routes Protection", () => {
