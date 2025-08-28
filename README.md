@@ -4,7 +4,7 @@ A modern Node.js riddles server with cloud database integration, player manageme
 
 ## Overview
 
-This project is a backend server that manages a collection of riddles and tracks how well players solve them. The server uses these cloud databases:
+This project is a backend server that manages a collection of riddles and tracks how well players solve them. Built with modern ES modules and comprehensive testing. The server uses these cloud databases:
 
 - **MongoDB Atlas** for riddles storage
 - **Supabase (PostgreSQL)** for players and score tracking
@@ -23,7 +23,7 @@ This project is a backend server that manages a collection of riddles and tracks
 - Health check endpoints
 - Graceful shutdown handling
 - Connection pooling
-- Comprehensive testing suite
+- Comprehensive testing suite with Vitest
 - Silent testing environment
 
 ### Business Features
@@ -398,7 +398,7 @@ Response:
 
 ### Test Structure
 
-The project includes comprehensive testing with Jest:
+The project includes comprehensive testing with Vitest (ES modules native support):
 
 ```
 test/
@@ -410,20 +410,19 @@ test/
     └── protectedRoutes.test.js   # Route protection tests
 ```
 
+Configuration file: `vitest.config.js`
+
 ### Running Tests
 
 ```bash
 # Run all tests
 npm test
 
-# Run specific test file
-npm test -- test/unit/authService.test.js
+# Run tests in watch mode (interactive)
+npm run test:watch
 
 # Run tests with coverage
 npm run test:coverage
-
-# Run tests in watch mode
-npm run test:watch
 ```
 
 ### Test Features
@@ -445,10 +444,15 @@ Tests cover:
 - Role-based permissions
 
 Example test output:
+
 ```
-✓ Authentication Service (17 tests)
-✓ Auth Routes Integration (6 tests)
-✓ Protected Routes Integration (12 tests)
+ RUN  v3.2.4
+ ✓ test/unit/authService.test.js (17 tests)
+ ✓ test/integration/authRoutes.test.js (17 tests)  
+ ✓ test/integration/protectedRoutes.test.js (21 tests)
+
+ Test Files  3 passed (3)
+      Tests  55 passed (55)
 ```
 
 ## Error Handling

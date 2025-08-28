@@ -17,7 +17,9 @@
     "nodejs",
     "mongodb",
     "supabase",
-    "rest-api"
+    "rest-api",
+    "vitest",
+    "express"
   ],
   "author": "",
   "license": "MIT",
