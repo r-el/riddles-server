@@ -2,10 +2,11 @@
  * Request Logger Middleware
  * Logs incoming HTTP requests
  */
+import { serverConfig } from "../config/server.js";
 
 const requestLogger = (req, res, next) => {
   // Skip logging during tests
-  if (process.env.NODE_ENV === "test") {
+  if (serverConfig.environment === "test") {
     return next();
   }
 
