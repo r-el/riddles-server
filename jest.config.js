@@ -2,7 +2,8 @@
  * Jest Configuration
  * Testing configuration for the riddles server
  */
-module.exports = {
+export default {
+  preset: "jest",
   testEnvironment: "node",
   verbose: true, // Show individual test results
   collectCoverage: true,
@@ -12,4 +13,14 @@ module.exports = {
   testMatch: ["**/__tests__/**/*.js", "**/?(*.)+(spec|test).js"],
   setupFilesAfterEnv: ["<rootDir>/test/setup.js"],
   testTimeout: 10000,
+  transform: {},
+  extensionsToTreatAsEsm: [".js"],
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
+  },
+  moduleNameMapping: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
 };
