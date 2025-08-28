@@ -1,13 +1,13 @@
 /**
  * Riddles Controller
  */
-const Riddle = require("../models/Riddle");
-const { catchAsync, ApiError } = require("../middleware/errorHandler");
+import Riddle from "../models/Riddle.js";
+import { catchAsync, ApiError } from "../middleware/errorHandler.js";
 
 /**
  * Get all riddles
  */
-exports.getAllRiddles = catchAsync(async (req, res) => {
+export const getAllRiddles = catchAsync(async (req, res) => {
   const { level, limit = 50, skip = 0 } = req.query;
   const filters = {};
 
@@ -25,7 +25,7 @@ exports.getAllRiddles = catchAsync(async (req, res) => {
 /**
  * Get a random riddle
  */
-exports.getRandomRiddle = catchAsync(async (req, res) => {
+export const getRandomRiddle = catchAsync(async (req, res) => {
   const riddle = await Riddle.findRandom();
 
   res.json({
@@ -37,7 +37,7 @@ exports.getRandomRiddle = catchAsync(async (req, res) => {
 /**
  * Get riddle by ID
  */
-exports.getRiddleById = catchAsync(async (req, res) => {
+export const getRiddleById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const riddle = await Riddle.findById(id);
 
@@ -54,7 +54,7 @@ exports.getRiddleById = catchAsync(async (req, res) => {
 /**
  * Create a new riddle
  */
-exports.createRiddle = catchAsync(async (req, res) => {
+export const createRiddle = catchAsync(async (req, res) => {
   const riddle = await Riddle.create(req.body);
 
   res.status(201).json({
@@ -67,7 +67,7 @@ exports.createRiddle = catchAsync(async (req, res) => {
 /**
  * Update a riddle
  */
-exports.updateRiddle = catchAsync(async (req, res) => {
+export const updateRiddle = catchAsync(async (req, res) => {
   const { id } = req.params;
   const riddle = await Riddle.updateById(id, req.body);
 
@@ -81,7 +81,7 @@ exports.updateRiddle = catchAsync(async (req, res) => {
 /**
  * Delete a riddle
  */
-exports.deleteRiddle = catchAsync(async (req, res) => {
+export const deleteRiddle = catchAsync(async (req, res) => {
   const { id } = req.params;
   await Riddle.deleteById(id);
 
@@ -95,7 +95,7 @@ exports.deleteRiddle = catchAsync(async (req, res) => {
 /**
  * Load initial riddles
  */
-exports.loadInitialRiddles = catchAsync(async (req, res) => {
+export const loadInitialRiddles = catchAsync(async (req, res) => {
   const { riddles } = req.body;
 
   if (!riddles || !Array.isArray(riddles) || riddles.length === 0) {
